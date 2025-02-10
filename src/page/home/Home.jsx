@@ -1,11 +1,10 @@
 import React from "react";
-import styles from "./Home.module.css";
+import { Common } from "../../component/home/common";
 
 export const Home = () => {
   return (
-    <div>
-      <h1>메인 페이지</h1>
-      <div>component</div>
-    </div>
+    <Common>
+      <h1>Home 화면</h1>
+    </Common>
   );
 };
