@@ -7,6 +7,10 @@ const App = () => (
   <Router>
     <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="/bindly" element={<Bindly />} />
+      <Route path="/analysis" element={<Analysis />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/regist" element={<Regist />} />
     </Routes>
   </Router>
 );
