@@ -1,0 +1,79 @@
+/* 전체 레이아웃 설정 */
+.custom-layout {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+/* 사이드바 너비 150px 유지 */
+.sidebar-wrapper {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 150px !important;  /* 사이드바 너비 조정 */
+  border-right: 1px solid #e5e5e5;
+  background: #fff;
+  z-index: 1;
+}
+
+/* 채팅창 크기 조정 (사이드바 너비를 제외한 나머지) */
+.chat-content-wrapper {
+  margin-left: 150px !important;  /* 사이드바 너비만큼 이동 */
+  width: 420px !important;  /* 모달 전체 570px에서 사이드바(150px)를 뺀 크기 */
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* 채팅 메시지 영역 */
+.chat-body {
+  flex-grow: 1;
+  overflow-y: auto;
+  max-height: calc(100% - 120px); /* 모달 크기에 맞춤 */
+  padding: 10px;
+}
+
+/* 불필요한 여백 제거 */
+.messages-wrapper {
+  margin-left: 0 !important;
+  height: 100%;
+  overflow-y: auto;
+}
+
+/* 모달 크기 고정 */
+.modal-dialog {
+  width: 570px !important;
+  height: 670px !important;
+  max-width: 570px !important;
+  max-height: 670px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 모달 내부 크기 고정 */
+.modal-content {
+  width: 570px !important;
+  height: 670px !important;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 채팅 입력창 (푸터) */
+.card-footer {
+  flex-shrink: 0;
+  text-align: center;
+  padding: 10px;
+}
+
+/* 버튼 크기 */
+.card-footer .d-flex {
+  gap: 10px;
+}
+
+.card-footer button {
+  width: auto !important;
+  min-width: 120px !important;
+  text-align: center !important;
+}

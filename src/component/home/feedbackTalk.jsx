@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styles from "./feedbackTalk.module.css";
 import feedbackIcon from "../../asset/rabbit.png"; // PNG 아이콘 불러오기
+import { Chat } from "../../page/home/Chat"
 
 const FeedbackTalk = () => {
     const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태 관리
@@ -28,7 +29,7 @@ const FeedbackTalk = () => {
             </div>
 
             {/* 모달 (현재는 UI만 표시) */}
-            {isModalOpen && (
+            {/* {isModalOpen && (
                 <div className={styles.modalOverlay} onClick={toggleModal}>
                     <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
                         <h2>Feedback Talk</h2>
@@ -36,7 +37,8 @@ const FeedbackTalk = () => {
                         <button className={styles.closeButton} onClick={toggleModal}>닫기</button>
                     </div>
                 </div>
-            )}
+            )} */}
+            {isModalOpen && <Chat onClose={toggleModal} />}
         </>
     );
 };
