@@ -1,0 +1,38 @@
+/* 기본 버튼 스타일 */
+.button {
+  width: 54vw; /* 반응형 크기 */
+  max-width: 1000px; /* 최대 너비 제한 */
+  min-width: 200px; /* 최소 너비 */
+  height: 8vh; /* 반응형 높이 */
+  min-height: 60px; /* 최소 높이 */
+  max-height: 100px; /* 최대 높이 */
+  padding: 1vh;
+  font-size: 2vw; /* 반응형 폰트 크기 */
+  font-weight: bold;
+  color: #1F3A93;
+  background-color: #b8c4f2;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.2s ease-in-out;
+}
+
+/* 태블릿 반응형 */
+@media (max-width: 1024px) {
+  .button {
+      width: 70%;
+      font-size: 2.5vw;
+      height: 7vh;
+  }
+}
+
+/* 모바일 반응형 */
+@media (max-width: 768px) {
+  .button {
+      width: 80%;
+      font-size: 4vw;
+      height: 6vh;
+      min-height: 50px;
+  }
+}
