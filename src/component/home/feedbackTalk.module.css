@@ -1,0 +1,115 @@
+/* 아이콘을 화면 오른쪽 아래에 고정 (반응형 적용) */
+.feedbackButton {
+  position: fixed;
+  bottom: 5vh; /* 뷰포트 높이에 비례한 위치 */
+  right: 5vw; /* 뷰포트 너비에 비례한 위치 */
+  width: 5vw; /* 반응형 크기 */
+  height: 5vw;
+  min-width: 70px; /* 최소 크기 */
+  min-height: 70px;
+  max-width: 100px; /* 최대 크기 */
+  max-height: 100px;
+  cursor: pointer;
+  z-index: 1000; /* 항상 위에 표시 */
+  border: 2px solid #1F3A93;
+  border-radius: 50%;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 아이콘 스타일 */
+.icon {
+  width: 4vw;
+  height: 4vw;
+  transition: transform 0.2s ease-in-out;
+}
+
+.icon:hover {
+  transform: scale(1.1); /* 아이콘 클릭 시 살짝 커지는 효과 */
+}
+
+/* 말풍선 스타일 (반응형 적용) */
+.tooltip {
+  position: absolute;
+  bottom: calc(100% + 1vh); /* 아이콘 위에 위치 */
+  background-color: #1F3A93;
+  color: white;
+  padding: 0.8vh 1.2vw; /* 반응형 패딩 */
+  font-size: clamp(12px, 1vw, 16px); /* 글씨 크기를 화면 크기에 따라 조정 */
+  border-radius: 5px;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(-50%);
+  left: 50%;
+  transition: opacity 0.3s ease-in-out;
+  pointer-events: none; /* 마우스 이벤트 차단 */
+  max-width: 300px; /* 최대 너비 설정 */
+  min-width: 100px; /* 최소 너비 설정 */
+}
+
+/* 말풍선 표시 시 애니메이션 효과 */
+.feedbackButton:hover .tooltip {
+  opacity: 1;
+}
+
+/* 모달 오버레이 */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1001; /* 아이콘보다 위 */
+}
+
+/* 모달 창 (반응형 적용) */
+.modalContent {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 35vw; /* 반응형 크기 */
+  min-width: 300px; /* 최소 크기 */
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* 닫기 버튼 */
+.closeButton {
+  margin-top: 10px;
+  padding: 10px;
+  border: none;
+  background: #1F3A93;
+  color: white;
+  cursor: pointer;
+  font-size: 1rem; 
+  border-radius: 5px;
+}
+
+.closeButton:hover {
+  background: #162d5f;
+}
+
+/* 태블릿 반응형 */
+@media (max-width: 1024px) {
+  .tooltip {
+    font-size: clamp(10px, 1.2vw, 14px); /* 태블릿에서 글씨 크기 줄이기 */
+    padding: 6px 12px;
+    max-width: 180px;
+  }
+}
+
+/* ✅ 모바일 반응형 */
+@media (max-width: 768px) {
+  .tooltip {
+    font-size: clamp(9px, 1.5vw, 13px); /* 모바일에서 더 작은 폰트 */
+    padding: 5px 10px;
+    max-width: 140px; /* 모바일에서 최대 너비 제한 */
+  }
+}

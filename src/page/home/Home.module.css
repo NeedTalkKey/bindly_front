@@ -1,0 +1,115 @@
+/* 폰트 설정 */
+@font-face {
+    font-family: 'omyu_pretty';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2304-01@1.0/omyu_pretty.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* 전체 컨테이너 */
+.container {
+    width: 100%;
+    height: 100vh;
+    background-color: #F5ECF2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: "omyu_pretty", sans-serif;
+    padding: 5vh 5vw; /* 화면 크기에 따라 여백 조정 */
+}
+
+/* 컨텐츠 레이아웃 */
+.content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+    max-width: 1200px;
+}
+
+/* 텍스트 섹션 */
+.textSection {
+    flex: 1;
+    text-align: left;
+}
+
+/* 제목 스타일 */
+.title {
+    font-family: 'omyu_pretty', sans-serif;
+    margin-top: 3vh;
+    font-size: 10vw; /* 반응형 폰트 크기 */
+    font-weight: bold;
+    color: #1F3A93;
+    margin-bottom: 1vh;
+}
+
+/* 부제목 스타일 */
+.subtitle {
+    margin-top: 2vh;
+    font-size: 3vw; /* 반응형 폰트 크기 */
+    color: #1F3A93;
+}
+
+/* 이미지 섹션 */
+.imageSection {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* 이미지 크기 자동 조정 */
+.image {
+    width: 50vw; /* 반응형 이미지 크기 */
+    max-width: 600px; /* 최대 크기 제한 */
+    mix-blend-mode: multiply;
+}
+
+/* 태블릿 및 모바일 반응형 */
+@media (max-width: 1024px) {
+    .content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .textSection {
+        text-align: center;
+        margin-bottom: 4vh;
+    }
+
+    .imageSection {
+        justify-content: center;
+    }
+
+    .title {
+        font-size: 8vw;
+    }
+
+    .subtitle {
+        font-size: 4vw;
+    }
+
+    .image {
+        width: 40vw;
+    }
+}
+
+/* 모바일 최적화 */
+@media (max-width: 768px) {
+    .textSection {
+        margin-bottom: 2vh;
+    }
+
+    .title {
+        font-size: 6vw;
+    }
+
+    .subtitle {
+        font-size: 3vw;
+    }
+
+    .image {
+        width: 50vw;
+        max-width: 200px;
+    }
+}
