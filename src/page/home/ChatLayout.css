@@ -1,26 +1,33 @@
-/* 전체 레이아웃 설정 */
+/************************************
+ * 전체 레이아웃 설정
+ ************************************/
 .custom-layout {
   position: relative;
   height: 100%;
   width: 100%;
+  min-height: 700px; /* 최소 높이 설정 */
 }
 
-/* 사이드바 너비 150px 유지 */
+/************************************
+ * 사이드바
+ ************************************/
 .sidebar-wrapper {
   position: absolute;
   top: 0;
   bottom: 0;
   left: 0;
-  width: 150px !important;  /* 사이드바 너비 조정 */
+  width: 150px !important; /* 사이드바 너비 */
   border-right: 1px solid #e5e5e5;
   background: #fff;
   z-index: 1;
 }
 
-/* 채팅창 크기 조정 (사이드바 너비를 제외한 나머지) */
+/************************************
+ * 채팅창(사이드바 제외 나머지)
+ ************************************/
 .chat-content-wrapper {
-  margin-left: 150px !important;  /* 사이드바 너비만큼 이동 */
-  width: 420px !important;  /* 모달 전체 570px에서 사이드바(150px)를 뺀 크기 */
+  margin-left: 150px !important; /* 사이드바 만큼 이동 */
+  width: 800px !important;       /* 기본 너비 */
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -31,43 +38,53 @@
   flex-grow: 1;
   overflow-y: auto;
   max-height: calc(100% - 120px); /* 모달 크기에 맞춤 */
-  padding: 10px;
+  padding: 10px; /* 상단 패딩 포함 */
 }
 
-/* 불필요한 여백 제거 */
+/************************************
+ * 메시지 래퍼
+ ************************************/
 .messages-wrapper {
   margin-left: 0 !important;
   height: 100%;
   overflow-y: auto;
 }
 
-/* 모달 크기 고정 */
+/************************************
+ * 모달 크기 및 여백
+ ************************************/
 .modal-dialog {
-  width: 570px !important;
-  height: 670px !important;
-  max-width: 570px !important;
-  max-height: 670px !important;
+  margin: 20px auto; /* 모달 주위 20px 간격 + 가운데 정렬 */
+  width: 950px !important;
+  height: 700px !important;
+  max-width: 950px !important;
+  max-height: 700px !important;
+  min-width: 570px !important; /* 최소 너비 */
   display: flex;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box; /* 여백 포함 계산 */
 }
 
-/* 모달 내부 크기 고정 */
 .modal-content {
-  width: 570px !important;
-  height: 670px !important;
+  width: 950px !important;
+  height: 700px !important;
+  max-width: 950px !important;
+  max-height: 700px !important;
+  min-width: 570px !important; /* 최소 너비 */
   display: flex;
   flex-direction: column;
 }
 
-/* 채팅 입력창 (푸터) */
+/************************************
+ * 채팅 입력창(푸터)
+ ************************************/
 .card-footer {
   flex-shrink: 0;
   text-align: center;
   padding: 10px;
 }
 
-/* 버튼 크기 */
 .card-footer .d-flex {
   gap: 10px;
 }
@@ -76,4 +93,23 @@
   width: auto !important;
   min-width: 120px !important;
   text-align: center !important;
+}
+
+/************************************
+ * 반응형 미디어 쿼리
+ ************************************/
+@media (max-width: 950px) {
+  .modal-dialog,
+  .modal-content {
+    width: 100% !important;
+    height: auto !important; /* 내용에 따라 높이 유동 */
+    min-height: 700px !important; /* 최소 높이 유지 */
+    box-sizing: border-box;
+    margin: 20px; /* 화면 작아도 여백 유지 */
+  }
+
+  .chat-content-wrapper {
+    /* 사이드바 제외 전체 너비 사용 */
+    width: calc(100% - 150px) !important;
+  }
 }
