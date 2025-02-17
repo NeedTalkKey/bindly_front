@@ -3,14 +3,16 @@ import { Common } from "../../component/home/common";
 import Button from "../../component/bindly/button";
 import styles from "./upload.module.css";
 import { ImCancelCircle } from "react-icons/im";
-import { PiSpinnerLight } from "react-icons/pi";  // FontAwesome 톱니바퀴 아이콘 추가
+import { PiSpinnerLight } from "react-icons/pi"; 
+import AnalysisResult from "../analysis/analysisResult"; // ✅ 결과 분석 화면 추가
+import GroupAnalysisResult from "../analysis/groupAnalysisResult";
 
 const Upload = () => {
     const [selectedFile, setSelectedFile] = useState(null);
-    const [errorMessage, setErrorMessage] = useState(""); // 에러 메시지
-    const [isLoading, setIsLoading] = useState(false); // 로딩 상태
-    const [progress, setProgress] = useState(0); // 진행률 (%)
-    const [currentPage, setCurrentPage] = useState("upload"); // 현재 화면 상태 추가
+    const [errorMessage, setErrorMessage] = useState(""); 
+    const [isLoading, setIsLoading] = useState(false); 
+    const [progress, setProgress] = useState(0);
+    const [currentPage, setCurrentPage] = useState("upload"); // ✅ 화면 상태 관리
 
     // 파일 선택 핸들러
     const handleFileChange = (event) => {
@@ -49,7 +51,7 @@ const Upload = () => {
         }
 
         setSelectedFile(file);
-        setErrorMessage(""); // 에러 초기화
+        setErrorMessage(""); 
     };
 
     // 파일 삭제 핸들러
@@ -69,7 +71,7 @@ const Upload = () => {
 
         setIsLoading(true);
         setProgress(0);
-        setCurrentPage("loading"); // 로딩 화면으로 전환
+        setCurrentPage("loading"); // ✅ 로딩 화면으로 변경
 
         let progressValue = 0;
         const interval = setInterval(() => {
@@ -79,7 +81,7 @@ const Upload = () => {
                 clearInterval(interval);
                 setTimeout(() => {
                     setIsLoading(false);
-                    setCurrentPage("result"); // 분석 결과 화면으로 전환
+                    setCurrentPage("result"); // ✅ 결과 분석 화면으로 변경
                 }, 500);
             }
             setProgress(progressValue);
@@ -88,7 +90,7 @@ const Upload = () => {
 
     return (
         <Common>
-            {currentPage === "upload" && (
+            {currentPage === "upload" && ( // ✅ 업로드 화면 표시
                 <div className={styles.uploadContainer} id="uploadSection">
                     <p className={styles.description}>대화내용.txt 파일을 업로드 해주세요</p>
                     <p className={styles.subDescription}>※ 업로드된 TXT 파일은 분석 시점을 기준으로 최근 1년간의 데이터만 포함됩니다.</p>
@@ -122,25 +124,20 @@ const Upload = () => {
                 </div>
             )}
 
-            {currentPage === "loading" && (
+            {currentPage === "loading" && ( // ✅ 로딩 화면 표시
                 <div className={styles.uploadContainer}>
                     <div className={styles.uploadBox}>
                         <p className={styles.loadingText}>분석 중...</p>
                         <div className={styles.loadingSpinnerContainer}>
-                            <PiSpinnerLight className={styles.loadingIcon}/>{/* 회전하는 스피너 */}
-                            <span className={styles.loadingPercentage}>{progress}%</span> {/* 고정된 퍼센트 */}
+                            <PiSpinnerLight className={styles.loadingIcon}/>
+                            <span className={styles.loadingPercentage}>{progress}%</span>
                         </div>
                     </div>
                 </div>
             )}
 
-            {currentPage === "result" && (
-                <div className={styles.uploadContainer}>
-                    <div className={styles.uploadBox}>
-                        <p className={styles.resultText}>분석 결과 화면</p>
-                        {/* 분석결과 화면으로 변경할 예정 */}
-                    </div>
-                </div>
+            {currentPage === "result" && ( // ✅ 업로드 박스를 제거하고 분석 화면만 표시
+                <AnalysisResult />
             )}
         </Common>
     );
