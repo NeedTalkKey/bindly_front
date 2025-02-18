@@ -7,7 +7,7 @@ export const AuthProvider = ({ children }) => {
   const [nickname, setNickname] = useState("");
 
   useEffect(() => {
-    const token = localStorage.getItem("authToken");
+    const token = localStorage.getItem("token");
     const storedNickname = localStorage.getItem("nickname");
     if (token) {
       setIsLoggedIn(true);
@@ -19,14 +19,14 @@ export const AuthProvider = ({ children }) => {
 
   // token과 nickname을 함께 인자로 받음
   const login = (token, nicknameValue) => {
-    localStorage.setItem("authToken", token);
+    localStorage.setItem("token", token);
     localStorage.setItem("nickname", nicknameValue);
     setIsLoggedIn(true);
     setNickname(nicknameValue);
   };
 
   const logout = () => {
-    localStorage.removeItem("authToken");
+    localStorage.removeItem("token");
     localStorage.removeItem("nickname");
     setIsLoggedIn(false);
     setNickname("");
