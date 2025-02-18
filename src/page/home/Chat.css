@@ -1,239 +1,159 @@
-/* 모달 기본 스타일 덮어쓰기 */
+/************************************
+ * 1) 모달 전체 배경(검은 오버레이)
+ ************************************/
+ .modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999; /* 최상단 */
+}
+
+/************************************
+ * 2) 모달 컨테이너(.modal-dialog)
+ ************************************/
 .modal-dialog {
-  width: 550px !important;
-  height: 700px !important;
-  max-width: 570px !important;
+  margin: 20px auto !important;      /* 위아래 20px, 좌우 auto */
+  width: 800px !important;             /* 기본 너비 */
+  height: 700px !important;            /* 기본 높이 */
+  max-width: 800px !important;
   max-height: 700px !important;
-  margin: auto !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
+  position: relative;
+  box-sizing: border-box !important;
 }
 
-/* 모달 내부 컨텐츠 */
+/************************************
+ * 3) 모달 내용(.modal-content)
+ * Flex 컨테이너 (세로 배치)
+ ************************************/
 .modal-content {
-    width: 100% !important;
-    height: 100% !important;
-    border-radius: 12px !important;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
-    overflow: hidden !important;
-    border: none !important;
-    display: flex !important;
-    flex-direction: column !important;
-}
-  
-  /* 채팅 헤더 */
-  .card-header {
-    background-color: #ffffff !important;
-    border-bottom: 1px solid #eaeaea !important;
-    padding: 15px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-  }
-  
-  /* 사용자 이름과 상태 */
-  .chat-title {
-    font-weight: bold !important;
-    font-size: 16px !important;
-    color: #333 !important;
-  }
-  
-  .chat-status {
-    font-size: 12px !important;
-    color: #28a745 !important;
-  }
-  
-/* 채팅 메시지 영역 */
-.card-body {
-    flex-grow: 1 !important;
-    overflow-y: auto !important;
-    max-height: calc(100vh - 300px) !important; /* 화면 크기에 맞게 조정 */
-    min-height: 300px !important; /* 최소 높이 설정 */
-    padding: 0px 10px 10px 10px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important; /* 자식이 축소 가능 */
+  border-radius: 12px !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
+  overflow: hidden !important;
+  border: none !important;
 }
 
-/* 스크롤바 디자인 */
-.card-body::-webkit-scrollbar {
-    width: 6px;
+/************************************
+ * 4) 전체 레이아웃 (.custom-layout)
+ ************************************/
+.custom-layout {
+  position: relative;
+  height: 100%;
+  width: 100%;
 }
 
-.card-body::-webkit-scrollbar-thumb {
-    background-color: #ccc;
-    border-radius: 3px;
-}
-
-.card-body::-webkit-scrollbar-track {
-    background-color: #f8f9fa;
-}
-  
-/* 메시지 스타일 */
-/* 상대방 메시지 (연한 하늘색) */
-.message.other .message-content {
-    background-color: #f8f5f7 !important; /* 밝은 하늘색 */
-    color: #333 !important;
-    border-radius: 12px !important;
-    padding: 12px 16px !important;
-    font-size: 14px !important;
-    max-width: 75% !important;
-    display: inline-block !important;
-    word-wrap: break-word !important;
-}
-
-/* 내가 보낸 메시지 (연한 파란색) */
-.message.you .message-content {
-    background-color: #b8c4f2 !important; /* 연한 파란색 */
-    color: #333 !important;
-    border-radius: 12px !important;
-    padding: 12px 16px !important;
-    font-size: 14px !important;
-    max-width: 75% !important;
-    display: inline-block !important;
-    word-wrap: break-word !important;
-}
-
-/* 말풍선 간격 조정 */
-.message {
-    margin-bottom: 14px !important;
-    display: flex !important;
-}
-
-/* 상대방 메시지 정렬 */
-.message.other {
-    justify-content: flex-start !important;
-}
-
-/* 내가 보낸 메시지 정렬 */
-.message.you {
-    justify-content: flex-end !important;
-}
-
-  
-  /* 입력창 스타일 */
-  .card-footer {
-    display: flex !important;
-    align-items: center !important;
-    padding: 10px !important;
-    background-color: #fff !important;
-    border-top: 1px solid #eaeaea !important;
-  }
-  
-  /* 메시지 입력 창 */
-  .card-footer textarea {
-    flex-grow: 1 !important;
-    border: none !important;
-    padding: 8px !important;
-    border-radius: 8px !important;
-    font-size: 14px !important;
-    resize: none !important;
-    outline: none !important;
-  }
-  
-  /* 전송 버튼 */
-  .card-footer button {
-    background-color: #f5ecf2 !important;
-    color: black !important;
-    border: none !important;
-    padding: 8px 15px !important;
-    margin-left: 10px !important;
-    border-radius: 8px !important;
-    cursor: pointer !important;
-  }
-  
-  .card-footer button:hover {
-    background-color: #f4e3ee !important;
-  }
-  
-
-  .ps__rail-y {
-    display: none !important;
-}
-
-/* 사이드바 너비 190px */
+/************************************
+ * 5) 왼쪽 사이드바
+ ************************************/
 .sidebar-wrapper {
-  width: 150px !important;
   position: absolute;
   top: 0;
   bottom: 0;
   left: 0;
+  width: 150px !important; /* 사이드바 너비 */
   border-right: 1px solid #e5e5e5;
-  background: #fff !important;
+  background: #AEBFF1 !important;
   z-index: 1;
+  padding: 10px;
 }
 
-/* 채팅 메시지 영역, 사이드바 너비만큼 마진 */
-.messages-wrapper {
-  margin-left: 350px;
-  height: 100%;
-  overflow-y: auto;
-}
-
-/* 카드 본문의 높이 지정 (필요에 따라 조정) */
-.chat-card-body {
-  position: relative;
-  height: 500px;
-}
-
-.symbol {
-  margin-right: 10px;
-}
-
-.card-footer {
+/************************************
+ * 6) 오른쪽 채팅 영역
+ ************************************/
+.chat-content-wrapper {
+  margin-left: 150px !important; /* 사이드바 만큼 오른쪽으로 */
+  padding-right: 20px !important; /* 오른쪽 여백 추가 */
   display: flex !important;
   flex-direction: column !important;
+  flex: 1 1 auto !important;  /* 남은 공간 전부 사용 */
+  min-height: 0 !important;
+  position: relative;         /* 닫기 아이콘, 오버레이 배치용 */
+}
+
+/************************************
+ * 7) 채팅 본문 (.card-body.chat-body)
+ ************************************/
+.card-body.chat-body {
+  flex: 1 1 auto !important;    /* 남은 공간을 채움 */
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  padding: 20px 10px 10px 10px !important;  /* 상단 20px 여백, 좌우/하단 10px */
+  background-color: #fff; /* 배경 통일 */
+}
+
+/************************************
+ * 8) 푸터 (.card-footer)
+ ************************************/
+.card-footer {
+  flex-shrink: 0 !important;    /* 줄어들지 않음 */
+  height: 80px !important;        /* 고정 높이 (원하는 값으로 조정) */
+  display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   text-align: center !important;
-}
-
-.card-footer button {
-  width: 170px; /* 버튼의 가로 크기 조정 */
-  text-align: center;
-}
-
-.card-footer {
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
-  text-align: center !important;
-  padding: 15px 0 !important;
+  background-color: #fff !important;
+  border-top: 1px solid #eaeaea !important;
 }
 
 .card-footer .d-flex {
-  gap: 0px; /* 버튼 간 간격 조정 */
+  gap: 10px;
 }
-
 .card-footer button {
-  width: auto !important;
   min-width: 120px !important;
-  text-align: center !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
 }
 
-.card-body.chat-body {
-  flex-grow: 1 !important;
-  overflow-y: auto !important;
-  height: 450px !important; /* 고정 높이 설정 */
-  padding: 15px 13px 13px 13px !important;
+/************************************
+ * 9) 메시지(말풍선) 스타일
+ ************************************/
+.message.other .message-content {
+  background-color: #f8f5f7 !important;
+  color: #333 !important;
+  border-radius: 12px !important;
+  padding: 12px 16px !important;
+  font-size: 14px !important;
+  max-width: 75% !important;
+  display: inline-block !important;
+  word-wrap: break-word !important;
 }
-
-/* 오른쪽 채팅 콘텐츠: 사이드바 너비만큼 여백 */
-.chat-content-wrapper {
-  margin-left: 190px !important;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+.message.you .message-content {
+  background-color: #b8c4f2 !important;
+  color: #333 !important;
+  border-radius: 12px !important;
+  padding: 12px 16px !important;
+  font-size: 14px !important;
+  max-width: 75% !important;
+  display: inline-block !important;
+  word-wrap: break-word !important;
 }
-
-.card-footer {
+.message {
+  margin-bottom: 14px !important;
   display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
-  text-align: center !important;
-  padding: 15px 0 !important;
-} 
+}
+.message.other {
+  justify-content: flex-start !important;
+}
+.message.you {
+  justify-content: flex-end !important;
+}
 
+/************************************
+ * 10) 닫기 아이콘 (X버튼)
+ ************************************/
 .close-icon {
   position: absolute;
   top: 10px;
@@ -242,16 +162,50 @@
   color: #1f3a93;
   cursor: pointer;
 }
-
 .close-icon:hover {
   color: red;
 }
 
-/* 채팅창 스타일 */
-.chat-content-wrapper {
-  position: relative; /* X버튼을 absolute로 배치하기 위한 기준 */
-  margin-left: 150px !important;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+/************************************
+ * 11) 비회원: 채팅영역 blur 처리
+ ************************************/
+.blurred {
+  filter: blur(4px);
+  pointer-events: none; /* 클릭 불가 */
+}
+
+/************************************
+ * 12) 비회원 안내 오버레이 (채팅영역 중앙)
+ ************************************/
+.login-overlay {
+  display: none;
+  position: absolute; /* .chat-content-wrapper 기준 */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 20px 30px;
+  border-radius: 8px;
+  text-align: center;
+}
+.login-overlay.active {
+  display: block;
+}
+
+/************************************
+ * 13) 반응형 미디어 쿼리 (최소 높이 유지)
+ ************************************/
+@media (max-width: 800px) {
+  .modal-dialog,
+  .modal-content {
+    width: 100% !important;
+    height: auto !important;
+    min-height: 600px !important;
+    margin: 20px !important;
+  }
+  .chat-content-wrapper {
+    margin-left: 150px !important;
+    padding-right: 20px !important;
+  }
 }
