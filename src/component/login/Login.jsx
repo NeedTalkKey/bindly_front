@@ -5,6 +5,7 @@ import logo from "../../asset/logo.png";
 import kakao from "../../asset/Kakao_logo.png";
 import { config } from "../../config.js";
 import { AuthContext } from "../../AuthContext.js"; // AuthContext import
+import { MdCancel } from "react-icons/md";
 
 const Login = ({
   isModalOpen,
@@ -78,9 +79,8 @@ const Login = ({
           <img className={loginStyles.loginlogo} src={logo} alt="Logo" />
         </div>
 
-        <button className={loginStyles.closeModalButton} onClick={closeLoginModal}>
-          X
-        </button>
+        <MdCancel className={loginStyles.closeModalButton} onClick={closeLoginModal}>
+        </MdCancel>
 
         <input
           type="text"

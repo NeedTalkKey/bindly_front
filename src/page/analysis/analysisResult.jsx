@@ -10,6 +10,7 @@ import MessageCount from "../../component/analysis/messageCount";
 import WordCloud from "../../component/analysis/wordCloud";
 import UploadComponent from "../bindly/upload";
 import Button from "../../component/bindly/button";
+import { Chat } from "../home/Chat";
 
 const tempData = {
     userName: "박지호",
@@ -46,6 +47,11 @@ const AnalysisResult = () => {
     const [fileName, setFileName] = useState("");
     const [showInput, setShowInput] = useState(false);
     const [showUpload, setShowUpload] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태 관리
+
+    const toggleModal = () => {
+        setIsModalOpen(!isModalOpen);
+    };
 
     const handleSaveAsImage = () => {
         setShowInput(true);
@@ -123,7 +129,10 @@ const AnalysisResult = () => {
                             <Button className={styles.buttonTop} text="📩 분석 결과 저장하기" onClick={handleSaveAsImage} />
                             <div className={styles.buttonRow}>
                                 <Button text="🔍 다른 대화 분석하기" onClick={handleResetAndUpload} />
-                                <Button text="💬 피드백 톡" onClick={() => alert("피드백 챗봇 실행")} />
+                                <Button text="💬 피드백 톡" className="chat-send" onClick={toggleModal} /> {/* 🚀 버튼 클릭 시 모달 열기 */}
+
+                                {/* 🔥 Chat 모달을 feedbacktalk.jsx와 동일하게 렌더링 */}
+                                {isModalOpen && <Chat onClose={toggleModal} />}
                             </div>
                         </div>
                     </>

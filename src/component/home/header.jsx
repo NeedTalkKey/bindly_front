@@ -45,7 +45,7 @@ const Header = () => {
       <header className={headerStyles.header}>
         {isLoggedIn ? (
           <div className={headerStyles.authContainer}>
-            <button className={headerStyles.nicknameBtn}>{nickname} 님</button>
+            <button className={headerStyles.nicknameBtn}>{nickname}님</button>
             <button className={headerStyles.logout} onClick={handleLogout}>
               로그아웃
             </button>
