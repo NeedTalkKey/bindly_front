@@ -9,10 +9,21 @@
     background: #F5ECF2;
     padding: 20px;
     border-radius: 10px;
+    
   }
-  
+
+  .friendshipMessageContainer:hover {
+    transform: scale(1.05);
+    /* ✅ 마우스 오버 시 살짝 확대 */
+  }
+
   .title {
     font-size: 18px;
     font-weight: bold;
     color: #1f3a93;
+  }
+
+  .friendshipImage {
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
+    height: 370px;
   }

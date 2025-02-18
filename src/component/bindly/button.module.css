@@ -21,8 +21,8 @@
 /* 태블릿 반응형 */
 @media (max-width: 1024px) {
   .button {
-      width: 70%;
-      font-size: 2.5vw;
+      width: 60%;
+      font-size: 2vw;
       height: 7vh;
   }
 }
