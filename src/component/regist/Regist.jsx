@@ -6,7 +6,7 @@ import { FaArrowLeft } from "react-icons/fa6";
 
 const Regist = ({ isModalOpen, closeRegistModal, openLoginModal }) => {
   // (아이디, 비밀번호, 비밀번호 확인, 이메일, 닉네임)
-  const [userid, setUserid] = useState(""); // 사용자 아이디
+  const [username, setUsername] = useState(""); // 사용자 아이디
   const [password, setPassword] = useState(""); // 비밀번호
   const [passwordConfirm, setPasswordConfirm] = useState(""); // 비밀번호 확인
   const [email, setEmail] = useState(""); // 이메일
@@ -45,7 +45,7 @@ const Regist = ({ isModalOpen, closeRegistModal, openLoginModal }) => {
   // 아이디 유효성 검사 및 중복 체크 (수정된 부분)
   const registUserid = async (e) => {
     const currentUserid = e.target.value.trim();
-    setUserid(currentUserid);
+    setUsername(currentUserid);
   
     if (!currentUserid) {
       setUseridMessage("아이디를 입력해주세요.");
@@ -62,7 +62,7 @@ const Regist = ({ isModalOpen, closeRegistModal, openLoginModal }) => {
     // 아이디 중복 체크 요청 (서버 엔드포인트: /auth/username-dupl-chk)
     setIsCheckingUserid(true);
     try {
-      const response = await axios.post('/auth/username-dupl-chk', { username: currentUserid });
+      const response = await axios.post('http://localhost:8080/auth/username-dupl-chk', { username: currentUserid });
       console.log("중복체크 응답:", response.data);
       if (!response.data.status) {
         setUseridMessage("이미 사용 중인 아이디입니다.");
@@ -138,7 +138,7 @@ const Regist = ({ isModalOpen, closeRegistModal, openLoginModal }) => {
       return;
     }
     try {
-      const response = await axios.post('/auth/send-email', { username: userid, receiver: email });
+      const response = await axios.post('http://localhost:8080/auth/send-email', { username: username, receiver: email });
       if (response.data.status) {
         setCodeMessage("인증번호가 전송되었습니다. 이메일을 확인해주세요.");
         setShowVerificationInput(true);
@@ -157,7 +157,7 @@ const Regist = ({ isModalOpen, closeRegistModal, openLoginModal }) => {
       return;
     }
     try {
-      const response = await axios.post('/auth/verify-email', { username: userid, auth_number: emailverificationCode });
+      const response = await axios.post('http://localhost:8080/auth/verify-email', { username: username, auth_number: emailverificationCode });
       console.log("이메일 인증 응답:", response.data);
       if (response.data.status) {
         setCodeMessage("인증번호가 확인되었습니다.");
@@ -174,7 +174,7 @@ const Regist = ({ isModalOpen, closeRegistModal, openLoginModal }) => {
   
   // 다음 버튼 클릭 시 이벤트 (모든 조건 및 이메일 인증 완료 후 이동)
   const goToStep2 = () => {
-    if (!userid || !password || !passwordConfirm || !email) {
+    if (!username || !password || !passwordConfirm || !email) {
       alert("모든 필드를 입력해주세요.");
       return;
     }
@@ -203,8 +203,8 @@ const Regist = ({ isModalOpen, closeRegistModal, openLoginModal }) => {
   const handleSubmitRegistration = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:3000/auth/create", {
-        userId: userid,
+      const response = await axios.post("http://localhost:8080/auth/create", {
+        username: username,
         password: password,
         email: email,
         nickname: nickname,
@@ -234,7 +234,7 @@ const Regist = ({ isModalOpen, closeRegistModal, openLoginModal }) => {
   
   // 입력란 초기화
   const resetForm = () => {
-    setUserid(""); 
+    setUsername(""); 
     setPassword(""); 
     setPasswordConfirm(""); 
     setEmail(""); 
@@ -270,7 +270,7 @@ const Regist = ({ isModalOpen, closeRegistModal, openLoginModal }) => {
                 <h3 className={registStyles.modalSubtitle}>회원가입</h3>
                 {/* 아이디 */}
                 <label className={registStyles.idregistlabel}>아이디</label>
-                <input type="text" placeholder="아이디" value={userid} onChange={registUserid} className={registStyles.registidinput} />
+                <input type="text" placeholder="아이디" value={username} onChange={registUserid} className={registStyles.registidinput} />
                 {isCheckingUserid && <p className={registStyles.message}>아이디 중복 확인 중...</p>}
                 {useridMessage && <div className={registStyles.errorMessage}>{useridMessage}</div>}
                 {/* 비밀번호 */}
@@ -293,7 +293,7 @@ const Regist = ({ isModalOpen, closeRegistModal, openLoginModal }) => {
                 {emailMessage && <div className={registStyles.errorMessage}>{emailMessage}</div>}
                 {showVerificationInput && (
                   <>
-                    <input type="text" placeholder="인증번호 4자리 입력" value={emailverificationCode} onChange={(e) => setEmailVerificationCode(e.target.value)} className={registStyles.EmailverificationInput} maxLength={4} />
+                    <input type="text" placeholder="인증번호 6자리 입력" value={emailverificationCode} onChange={(e) => setEmailVerificationCode(e.target.value)} className={registStyles.EmailverificationInput} maxLength={6} />
                     <button type="button" className={registStyles.EmailverificationconfirmButton} onClick={verifyEmailCode}>
                       인증번호 확인
                     </button>
