@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Common } from "../../component/home/common";
 import html2canvas from "html2canvas";
 import styles from "./groupAnalysisResult.module.css";
 import WordCloud from "../../component/analysis/wordCloud";
@@ -64,44 +65,48 @@ const GroupAnalysisResult = () => {
     };
 
     return (
-        <div className={styles.analysisContainer}>
-            {showUpload ? (
-                <UploadComponent />
-            ) : (
-                <>
-                    <div id="captureArea">
-                        <h2 className={styles.title}>분석결과(단체 대화)</h2>
-                        <div className={styles.resultLayout}>
-                            <div className={styles.wordCloudSection}>
-                                <WordCloud words={tempData.keywords} />
+        <Common>
+            <div className={styles.analysisContainer}>
+                {showUpload ? (
+                    <UploadComponent />
+                ) : (
+                    <>
+                        <div id="captureArea">
+                            <div className={styles.headerSection}>
+                                <h2 className={styles.title}>분석결과(단체 대화)</h2>
                             </div>
-                            <div className={styles.chartSection}>
-                                <StyleChart data={tempData.conversationStyle} />
-                            </div>
-                            <div className={styles.talkerSection}>
-                                <TopTalker talkers={tempData.talkers} />
+                            <div className={styles.resultLayout}>
+                                <div className={styles.wordCloudSection}>
+                                    <WordCloud words={tempData.keywords} />
+                                </div>
+                                <div className={styles.chartSection}>
+                                    <StyleChart data={tempData.conversationStyle} />
+                                </div>
+                                <div className={styles.talkerSection}>
+                                    <TopTalker talkers={tempData.talkers} />
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    {showInput && (
-                        <div className={styles.inputContainer}>
-                            <input
-                                type="text"
-                                placeholder="저장할 파일명을 입력하세요"
-                                value={fileName}
-                                onChange={(e) => setFileName(e.target.value)}
-                                className={styles.fileInput}
-                            />
-                            <button onClick={captureScreen} className={styles.saveButton}>확인</button>
+                        {showInput && (
+                            <div className={styles.inputContainer}>
+                                <input
+                                    type="text"
+                                    placeholder="저장할 파일명을 입력하세요"
+                                    value={fileName}
+                                    onChange={(e) => setFileName(e.target.value)}
+                                    className={styles.fileInput}
+                                />
+                                <button onClick={captureScreen} className={styles.saveButton}>확인</button>
+                            </div>
+                        )}
+                        <div className={styles.buttonContainer}>
+                            <Button text="📩 분석 결과 저장하기" onClick={handleSaveAsImage} />
+                            <Button text="🔍 다른 대화 분석하기" onClick={handleResetAndUpload} />
                         </div>
-                    )}
-                    <div className={styles.buttonContainer}>
-                        <Button text="📩 분석 결과 저장하기" onClick={handleSaveAsImage} />
-                        <Button text="🔍 다른 대화 분석하기" onClick={handleResetAndUpload} />
-                    </div>
-                </>
-            )}
-        </div>
+                    </>
+                )}
+            </div>
+        </Common>
 
     );
 };

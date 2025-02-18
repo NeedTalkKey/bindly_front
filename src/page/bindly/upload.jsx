@@ -138,6 +138,7 @@ const Upload = () => {
 
             {currentPage === "result" && ( // ✅ 업로드 박스를 제거하고 분석 화면만 표시
                 <AnalysisResult />
+                // <GroupAnalysisResult />
             )}
         </Common>
     );

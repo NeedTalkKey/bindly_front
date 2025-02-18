@@ -1,114 +1,103 @@
-/* 📌 분석 결과 페이지 전체 컨테이너 */
+/* 📌 분석 결과 페이지 전체 컨테이너 - 반응형 적용 */
 .analysisContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     width: 100%;
-    height: 100vh;
+    min-height: 100vh;
     margin: 0 auto;
     padding: 20px;
     background-color: #F5ECF2;
 }
 
-/* 📌 제목 및 설명을 왼쪽 정렬 */
+/* 📌 제목 및 설명을 왼쪽 정렬 - 반응형 적용 */
 .headerSection {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    width: 100%;
+    width: 90%;
     padding-left: 40px;
-    margin-bottom: 20px;
     margin-left: 50px;
 }
 
 .title {
-    font-size: 36px;
+    font-size: 2vw;
     font-weight: bold;
     text-align: left;
-    margin-bottom: 30px;
+    color: #1F3A93;
 }
 
 .description {
-    font-size: 24px;
+    font-size: 1.5vw;
     text-align: left;
-    /* margin-bottom: 20px; */
+    color: #1F3A93;
 }
-
-/* 📌 결과 레이아웃 - 왼쪽(이미지+점수) & 오른쪽(2x2 분석) */
+/* 그림자 적용 */
+/* 📌 결과 레이아웃 - 반응형 적용 */
 .resultLayout {
     display: flex;
-    flex-direction: row;
-    justify-content: center; /* 왼쪽 정렬 */
+    flex-wrap: row;
+    justify-content: center;
+    align-items: center;
     width: 100%;
-    gap: 40px;
-    margin-bottom: 20px;
-    padding-left: 40px;
+    gap: 20px;
 }
 
-/* 📌 왼쪽 (친밀감 분석 영역 + 점수) */
+/* 📌 왼쪽 (친밀감 분석 영역 + 점수) - 반응형 적용 */
 .leftContainer {
     display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 20px;
 }
 
-.leftSection {
-    display: flex;
-    align-items: center;
-    width: 350px;
-    height: 420px; /* 높이 조정 */
-    background: #F5ECF2;
-    padding: 20px;
-    border-radius: 15px;
-}
-
-/* 📌 친밀감 점수 높이 통일 */
-.chartSection {
+.leftSection, .chartSection {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 350px;
-    height: 420px; /* 높이 조정 */
+    width: 45%;
+    min-width: 300px;
+    height: auto;
     background: #F5ECF2;
     padding: 20px;
     border-radius: 15px;
 }
 
-/* 📌 2X2 분석 결과 컨테이너 - 오른쪽 정렬 */
+/* 📌 2X2 분석 결과 컨테이너 - 반응형 적용 */
 .analysisGrid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
-    width: 700px;
-    height: 420px; /* 높이 조정 */
-    justify-content: flex-start;
+    width: 90%;
+    max-width: 700px;
+    justify-content: center;
+    margin-bottom: 10px;
 }
 
-
-/* 📌 개별 분석 박스 - 자연스러운 크기 조정 */
 .analysisGrid div {
     background: #F5ECF2;
-    padding: 20px;
+    padding: 10px;
     border-radius: 15px;
     text-align: center;
-    width: 320px;
-    height: 200px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-/* 📌 파일명 입력창 스타일 */
+/* 📌 파일명 입력창 - 반응형 적용 */
 .inputContainer {
     display: flex;
     align-items: center;
     gap: 10px;
     margin-top: 20px;
+    justify-content: center;
+    margin-bottom: 10px;
 }
 
 .fileInput {
     width: 300px;
+    max-width: 400px;
     padding: 10px;
     font-size: 16px;
     border: 1px solid #ccc;
@@ -131,46 +120,28 @@
     background-color: #6d88f5;
 }
 
-
-/* 📌 버튼 컨테이너 - 분석결과 저장 버튼 위, 나머지 좌우 정렬 */
+/* 📌 버튼 컨테이너 - 반응형 적용 */
 .buttonContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 30px;
     width: 100%;
     gap: 10px;
-}
-
-.buttonTop {
-    padding: 15px;
-    font-size: 16px;
-    font-weight: bold;
-    color: white;
-    background-color: #b8c4f2;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    text-align: center;
-    transition: background 0.3s;
-}
-
-.buttonTop:hover {
-    background-color: #b8c4f2;
 }
 
 .buttonRow {
     display: flex;
     justify-content: center;
-    gap: 40px;
+    gap: 20px;
+    flex-wrap: wrap;
     width: 100%;
 }
 
 .buttonRow button {
-    width: 25.8vw; /* 기존보다 짧게 조정 */
-    height: 8vh;
-    padding: 1vh;
-    font-size: 2vw;
+    width: 26.5vw;
+    min-width: 150px;
+    padding: 10px;
+    font-size: 1.5vw;
     font-weight: bold;
     color: #1F3A93;
     background-color: #b8c4f2;
@@ -179,4 +150,24 @@
     cursor: pointer;
     text-align: center;
     transition: background 0.3s;
+}
+
+@media (max-width: 768px) {
+    .resultLayout {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .leftSection, .chartSection {
+        width: 90%;
+    }
+
+    .title {
+        font-size: 8vw;
+        text-align: center;
+    }
+    
+    .buttonRow button{
+        font-size: 2.5vw;
+    }
 }
