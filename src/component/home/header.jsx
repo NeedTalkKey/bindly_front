@@ -1,14 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Common } from "./common";
 import headerStyles from "./header.module.css";
 import Login from "../login/Login";
 import Regist from "../regist/Regist";
+import { AuthContext } from "../../AuthContext"; // AuthContext import
 
 const Header = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 상태
-  const [nickname, setNickname] = useState(""); // 닉네임 
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false); // 로그인 모달 상태
-  const [isRegistModalOpen, setIsRegistModalOpen] = useState(false); // 회원가입 모달 상태
+  // AuthContext에서 전역 로그인 상태와 닉네임, 로그아웃 함수를 가져옴
+  const { isLoggedIn, nickname, logout } = useContext(AuthContext);
+
+  // 로그인/회원가입 모달 상태는 로컬로 관리
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isRegistModalOpen, setIsRegistModalOpen] = useState(false);
 
   // 로그인 모달 열기
   const openLoginModal = () => {
@@ -32,11 +35,9 @@ const Header = () => {
     setIsRegistModalOpen(false);
   };
 
-  // 로그아웃
+  // 로그아웃 시 AuthContext의 logout() 호출
   const handleLogout = () => {
-    setIsLoggedIn(false);
-    setNickname("");
-    localStorage.removeItem("token");
+    logout();
   };
 
   return (
@@ -60,8 +61,6 @@ const Header = () => {
       <Login
         isModalOpen={isLoginModalOpen}
         closeLoginModal={closeLoginModal}
-        setIsLoggedIn={setIsLoggedIn}
-        setNickname={setNickname}
         openRegistModal={openRegistModal} // 회원가입 모달 열기
       />
 
