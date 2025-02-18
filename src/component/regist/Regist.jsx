@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import axios from "axios";
 import registStyles from "./Regist.module.css";
-import backb from "../../asset/back-arrow.png";
+import { MdCancel } from "react-icons/md";
+import { FaArrowLeft } from "react-icons/fa6";
 
 const Regist = ({ isModalOpen, closeRegistModal, openLoginModal }) => {
-  //(아이디, 비밀번호, 비밀번호 확인, 이메일, 닉네임)
+  // (아이디, 비밀번호, 비밀번호 확인, 이메일, 닉네임)
   const [userid, setUserid] = useState(""); // 사용자 아이디
   const [password, setPassword] = useState(""); // 비밀번호
   const [passwordConfirm, setPasswordConfirm] = useState(""); // 비밀번호 확인
@@ -41,7 +42,7 @@ const Regist = ({ isModalOpen, closeRegistModal, openLoginModal }) => {
   // 이메일 인증번호 입력창 보이기 여부
   const [showVerificationInput, setShowVerificationInput] = useState(false);
   
-  // 아이디 유효성 검사
+  // 아이디 유효성 검사 및 중복 체크 (수정된 부분)
   const registUserid = async (e) => {
     const currentUserid = e.target.value.trim();
     setUserid(currentUserid);
@@ -58,11 +59,12 @@ const Regist = ({ isModalOpen, closeRegistModal, openLoginModal }) => {
       return;
     }
   
-    // 아이디 중복 체크 요청
+    // 아이디 중복 체크 요청 (서버 엔드포인트: /auth/username-dupl-chk)
     setIsCheckingUserid(true);
     try {
-      const response = await axios.post('/api/check-id', { id: currentUserid });
-      if (response.data.isDuplicate) {
+      const response = await axios.post('/auth/username-dupl-chk', { username: currentUserid });
+      console.log("중복체크 응답:", response.data);
+      if (!response.data.status) {
         setUseridMessage("이미 사용 중인 아이디입니다.");
         setIsUserid(false);
       } else {
@@ -70,6 +72,7 @@ const Regist = ({ isModalOpen, closeRegistModal, openLoginModal }) => {
         setIsUserid(true);
       }
     } catch (error) {
+      console.error("중복체크 요청 에러:", error);
       setUseridMessage("아이디 중복 확인 중 오류가 발생했습니다.");
       setIsUserid(false);
     } finally {
@@ -107,7 +110,7 @@ const Regist = ({ isModalOpen, closeRegistModal, openLoginModal }) => {
       setPasswordConfirmMessage("동일한 비밀번호를 입력해주세요.");
       setIsPasswordConfirm(false);
     } else {
-      setPasswordConfirmMessage("");
+      setPasswordConfirmMessage("동일한 비밀번호입니다.");
       setIsPasswordConfirm(true);
     }
   };
@@ -135,8 +138,8 @@ const Regist = ({ isModalOpen, closeRegistModal, openLoginModal }) => {
       return;
     }
     try {
-      const response = await axios.post('/api/send-email-verification', { email });
-      if (response.data.success) {
+      const response = await axios.post('/auth/send-email', { username: userid, receiver: email });
+      if (response.data.status) {
         setCodeMessage("인증번호가 전송되었습니다. 이메일을 확인해주세요.");
         setShowVerificationInput(true);
       } else {
@@ -154,12 +157,13 @@ const Regist = ({ isModalOpen, closeRegistModal, openLoginModal }) => {
       return;
     }
     try {
-      const response = await axios.post('/api/verify-email-code', { email, emailverificationCode });
-      if (response.data.verified) {
+      const response = await axios.post('/auth/verify-email', { username: userid, auth_number: emailverificationCode });
+      console.log("이메일 인증 응답:", response.data);
+      if (response.data.status) {
         setCodeMessage("인증번호가 확인되었습니다.");
         setIsCodeVerified(true);
       } else {
-        setCodeMessage("인증번호가 일치하지 않습니다.");
+        setCodeMessage(response.data.message || "인증번호가 일치하지 않습니다.");
         setIsCodeVerified(false);
       }
     } catch (error) {
@@ -195,20 +199,18 @@ const Regist = ({ isModalOpen, closeRegistModal, openLoginModal }) => {
     resetForm();
   };
   
-  // 회원가입 완료 후 입력 초기화
-  // 회원가입 완료 후 API 호출 및 입력 초기화
+  // 회원가입 완료 후 입력 초기화 및 API 호출
   const handleSubmitRegistration = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:3000/auth/register", {
+      const response = await axios.post("http://localhost:3000/auth/create", {
         userId: userid,
         password: password,
         email: email,
         nickname: nickname,
       });
-      console.log(response)
-      
-      if (response.data.success) {
+      console.log("회원가입 응답:", response.data);
+      if (response.data.status) {
         alert("회원가입이 완료되었습니다!");
         closeRegistModal(); // 회원가입 모달 닫기
         if (openLoginModal) {
@@ -252,23 +254,19 @@ const Regist = ({ isModalOpen, closeRegistModal, openLoginModal }) => {
     setIsCodeVerified(false);
     setShowVerificationInput(false);
   };
-
+  
   return (
     <>
-      {/* 회원가입 모달 */}
       {isModalOpen && (
         <div className={registStyles.modalOverlay} onClick={closeRegist}>
           <div className={registStyles.modalContent} onClick={(e) => e.stopPropagation()}>
             {/* 닫기 버튼 */}
-            <button className={registStyles.closeModalButton} onClick={closeRegist}>
-            x
-            </button>
-
+            <MdCancel className={registStyles.closeModalButton} onClick={closeRegist} />
+  
             {/* 회원가입 1단계 */}
             {isStep1Open && (
               <form>
-                <img src={backb} className={registStyles.backButton} onClick={() => { resetForm(); openLoginModal();}} alt="뒤로가기">
-                </img>
+                <FaArrowLeft className={registStyles.backButton} onClick={() => { resetForm(); openLoginModal(); }} />
                 <h3 className={registStyles.modalSubtitle}>회원가입</h3>
                 {/* 아이디 */}
                 <label className={registStyles.idregistlabel}>아이디</label>
@@ -282,52 +280,45 @@ const Regist = ({ isModalOpen, closeRegistModal, openLoginModal }) => {
                 {/* 비밀번호 확인 */}
                 <input type="password" placeholder="비밀번호 확인" value={passwordConfirm} onChange={registPasswordConfirm} className={registStyles.registpwconfirminput} />
                 {passwordConfirmMessage && (
-                <div className={registStyles.errorMessage}>{passwordConfirmMessage}</div>
+                  <div className={registStyles.errorMessage}>{passwordConfirmMessage}</div>
                 )}
                 {/* 이메일 */}
                 <label className={registStyles.emailregistlabel}>이메일</label>
                 <div className={registStyles.emailContainer}>
-                {/* 이메일 입력 */}
-                <input type="email" placeholder="이메일 입력" value={email} onChange={EmailEvent} className={registStyles.emailregistInput} />
-                {/* 인증번호 받기 */}
-                <button type="button" className={registStyles.EmailverificationButton} onClick={verificationEmailButton} disabled={!emailRegExp.test(email)}>
-                인증번호 받기
-                </button>
+                  <input type="email" placeholder="이메일 입력" value={email} onChange={EmailEvent} className={registStyles.emailregistInput} />
+                  <button type="button" className={registStyles.EmailverificationButton} onClick={verificationEmailButton} disabled={!emailRegExp.test(email)}>
+                    인증번호 받기
+                  </button>
                 </div>
                 {emailMessage && <div className={registStyles.errorMessage}>{emailMessage}</div>}
                 {showVerificationInput && (
                   <>
-                    {/* 인증번호 4자리 입력 */}
                     <input type="text" placeholder="인증번호 4자리 입력" value={emailverificationCode} onChange={(e) => setEmailVerificationCode(e.target.value)} className={registStyles.EmailverificationInput} maxLength={4} />
-                    {/* 인증번호 확인 */}
                     <button type="button" className={registStyles.EmailverificationconfirmButton} onClick={verifyEmailCode}>
                       인증번호 확인
                     </button>
                   </>
                 )}
                 {codeMessage && <div className={registStyles.infoMessage}>{codeMessage}</div>}
-                {/* 다음 */}
                 <button type="button" className={registStyles.nextButton} onClick={goToStep2}>
                   다음
                 </button>
               </form>
             )}
-
+  
             {/* 회원가입 2단계 */}
             {isStep2Open && (
-            <form onSubmit={handleSubmitRegistration}>
-            <button type="button" className={registStyles.backButton} onClick={goToStep1}>←</button>
-            <h3 className={registStyles.modalSubtitle}>회원가입</h3>
-              {/* 닉네임 */}
-            <label className={registStyles.registnicknamelabel}>닉네임</label>
-            <input type="text" placeholder="닉네임을 입력하세요" value={nickname} onChange={(e) => setNickname(e.target.value)} className={registStyles.registNicknameInput} />
-            {/* 회원가입 완료 */}
-            <button type="submit" className={registStyles.completeButton}>
-            시작하기
-            </button>
-            </form>
+              <form onSubmit={handleSubmitRegistration}>
+                <FaArrowLeft type="button" className={registStyles.backButton} onClick={goToStep1} />
+                <h3 className={registStyles.modalSubtitle}>회원가입</h3>
+                <label className={registStyles.registnicknamelabel}>닉네임</label>
+                <input type="text" placeholder="닉네임을 입력하세요" value={nickname} onChange={(e) => setNickname(e.target.value)} className={registStyles.registNicknameInput} />
+                <button type="submit" className={registStyles.completeButton}>
+                  시작하기
+                </button>
+              </form>
             )}
-            </div>
+          </div>
         </div>
       )}
     </>
