@@ -84,13 +84,13 @@ const Regist = ({ isModalOpen, closeRegistModal, openLoginModal }) => {
   const registPassword = (e) => {
     const currentPassword = e.target.value.trim();
     setPassword(currentPassword);
-  
-    const passwordRegExp = /^[a-zA-Z0-9_]{6,32}$/;
+    
+    const passwordRegExp = /^(?=.{6,20}$)[A-Za-z0-9!@#$%^&*]+$/;
     if (!passwordRegExp.test(currentPassword)) {
-      setPasswordMessage("6글자 이상 입력해 주세요.");
+      setPasswordMessage("비밀번호는 6자 이상, 20자 이하여야 합니다.");
       setIsPassword(false);
     } else {
-      setPasswordMessage("");
+      setPasswordMessage("사용 가능한 비밀번호 입니다.");
       setIsPassword(true);
     }
   };
@@ -126,7 +126,7 @@ const Regist = ({ isModalOpen, closeRegistModal, openLoginModal }) => {
       setEmailMessage("이메일 형식이 올바르지 않습니다.");
       setIsEmail(false);
     } else {
-      setEmailMessage("");
+      setEmailMessage("사용 할 수있는 이메일입니다.");
       setIsEmail(true);
     }
   };
@@ -270,21 +270,21 @@ const Regist = ({ isModalOpen, closeRegistModal, openLoginModal }) => {
                 <h3 className={registStyles.modalSubtitle}>회원가입</h3>
                 {/* 아이디 */}
                 <label className={registStyles.idregistlabel}>아이디</label>
-                <input type="text" placeholder="아이디" value={username} onChange={registUserid} className={registStyles.registidinput} />
-                {isCheckingUserid && <p className={registStyles.message}>아이디 중복 확인 중...</p>}
+                <input type="text" placeholder="아이디" value={username} onChange={registUserid} className={registStyles.registidinput} maxLength={20}/>
+                {isCheckingUserid}
                 {useridMessage && <div className={registStyles.errorMessage}>{useridMessage}</div>}
                 {/* 비밀번호 */}
                 <label className={registStyles.pwregistlabel}>비밀번호</label>
-                <input type="password" placeholder="비밀번호" value={password} onChange={registPassword} className={registStyles.registpwinput} />
+                <input type="password" placeholder="비밀번호" value={password} onChange={registPassword} className={registStyles.registpwinput} maxLength={20}/>
                 {passwordMessage && <div className={registStyles.errorMessage}>{passwordMessage}</div>}
                 {/* 비밀번호 확인 */}
-                <input type="password" placeholder="비밀번호 확인" value={passwordConfirm} onChange={registPasswordConfirm} className={registStyles.registpwconfirminput} />
+                <input type="password" placeholder="비밀번호 확인" value={passwordConfirm} onChange={registPasswordConfirm} className={registStyles.registpwconfirminput} maxLength={20}/>
                 {passwordConfirmMessage && (
                   <div className={registStyles.errorMessage}>{passwordConfirmMessage}</div>
                 )}
                 {/* 이메일 */}
                 <label className={registStyles.emailregistlabel}>이메일</label>
-                <div className={registStyles.emailContainer}>
+                <div className={registStyles.emailreceiveContainer}>
                   <input type="email" placeholder="이메일 입력" value={email} onChange={EmailEvent} className={registStyles.emailregistInput} />
                   <button type="button" className={registStyles.EmailverificationButton} onClick={verificationEmailButton} disabled={!emailRegExp.test(email)}>
                     인증번호 받기
@@ -292,12 +292,12 @@ const Regist = ({ isModalOpen, closeRegistModal, openLoginModal }) => {
                 </div>
                 {emailMessage && <div className={registStyles.errorMessage}>{emailMessage}</div>}
                 {showVerificationInput && (
-                  <>
-                    <input type="text" placeholder="인증번호 6자리 입력" value={emailverificationCode} onChange={(e) => setEmailVerificationCode(e.target.value)} className={registStyles.EmailverificationInput} maxLength={6} />
+                  <div className={registStyles.emailverifyContainer}>
+                    <input type="text" placeholder="이메일 인증번호 입력" value={emailverificationCode} onChange={(e) => setEmailVerificationCode(e.target.value)} className={registStyles.EmailverificationInput} maxLength={6} />
                     <button type="button" className={registStyles.EmailverificationconfirmButton} onClick={verifyEmailCode}>
                       인증번호 확인
                     </button>
-                  </>
+                  </div>
                 )}
                 {codeMessage && <div className={registStyles.infoMessage}>{codeMessage}</div>}
                 <button type="button" className={registStyles.nextButton} onClick={goToStep2}>
@@ -308,11 +308,18 @@ const Regist = ({ isModalOpen, closeRegistModal, openLoginModal }) => {
   
             {/* 회원가입 2단계 */}
             {isStep2Open && (
-              <form onSubmit={handleSubmitRegistration}>
+              <form onSubmit={handleSubmitRegistration} className={registStyles.modalStep2}>
+                <div className={registStyles.topBar}>
                 <FaArrowLeft type="button" className={registStyles.backButton} onClick={goToStep1} />
                 <h3 className={registStyles.modalSubtitle}>회원가입</h3>
+                <MdCancel className={registStyles.closeModalButton} onClick={closeRegist} />
+                </div>
+                {/* 닉네임 */}
+                <div className={registStyles.nickContainer}>
                 <label className={registStyles.registnicknamelabel}>닉네임</label>
-                <input type="text" placeholder="닉네임을 입력하세요" value={nickname} onChange={(e) => setNickname(e.target.value)} className={registStyles.registNicknameInput} />
+                <input type="text" placeholder="닉네임을 입력하세요" value={nickname} onChange={(e) => setNickname(e.target.value)} className={registStyles.registNicknameInput} 
+                maxLength={20}/>
+                </div>
                 <button type="submit" className={registStyles.completeButton}>
                   시작하기
                 </button>
