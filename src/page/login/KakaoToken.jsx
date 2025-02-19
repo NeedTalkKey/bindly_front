@@ -13,7 +13,8 @@ const SaveToLocalStorage = () => {
     if ("token" in params && "nickname" in params) {
       localStorage.setItem("token", params["token"]);
       localStorage.setItem("nickname", params["nickname"]);
-      login(params["token"], params["nickname"]);
+      localStorage.setItem("user_model", params["user_model"]);
+      login(params["token"], params["nickname"], params["user_model"]);
       navigate("/");
     }
   }, [params, navigate]);

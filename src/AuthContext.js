@@ -18,9 +18,10 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   // token과 nickname을 함께 인자로 받음
-  const login = (token, nicknameValue) => {
+  const login = (token, nicknameValue, user_model) => {
     localStorage.setItem("token", token);
     localStorage.setItem("nickname", nicknameValue);
+    localStorage.setItem("user_model", user_model);
     setIsLoggedIn(true);
     setNickname(nicknameValue);
   };
@@ -28,6 +29,7 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("nickname");
+    localStorage.removeItem("user_model");
     setIsLoggedIn(false);
     setNickname("");
   };

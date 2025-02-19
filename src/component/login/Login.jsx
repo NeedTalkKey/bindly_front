@@ -7,18 +7,14 @@ import { config } from "../../config.js";
 import { AuthContext } from "../../AuthContext.js"; // AuthContext import
 import { MdCancel } from "react-icons/md";
 
-const Login = ({
-  isModalOpen,
-  closeLoginModal,
-  openRegistModal,
-}) => {
+const Login = ({ isModalOpen, closeLoginModal, openRegistModal }) => {
   const navigate = useNavigate();
 
   // AuthContext에서 login 함수를 가져옴
   const { login } = useContext(AuthContext);
 
-  const [username, setUserId] = useState(""); 
-  const [password, setPassword] = useState(""); 
+  const [username, setUserId] = useState("");
+  const [password, setPassword] = useState("");
 
   // 로그인 버튼 클릭 시 처리
   const handleLogin = async () => {
@@ -44,7 +40,7 @@ const Login = ({
         alert("로그인 성공!");
 
         // **중요**: AuthContext의 login 함수에 (token, nickname) 모두 넘김
-        login(data.token, data.nickname);
+        login(data.token, data.nickname, data.user_model);
 
         // 모달 닫고 메인 페이지로 이동
         closeLoginModal();
@@ -74,13 +70,18 @@ const Login = ({
 
   return (
     <div className={loginStyles.modalOverlay} onClick={closeLoginModal}>
-      <div className={loginStyles.modalContent} onClick={(e) => e.stopPropagation()}>
+      <div
+        className={loginStyles.modalContent}
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className={loginStyles.loginHeader}>
           <img className={loginStyles.loginlogo} src={logo} alt="Logo" />
         </div>
 
-        <MdCancel className={loginStyles.closeModalButton} onClick={closeLoginModal}>
-        </MdCancel>
+        <MdCancel
+          className={loginStyles.closeModalButton}
+          onClick={closeLoginModal}
+        ></MdCancel>
 
         <input
           type="text"
@@ -107,8 +108,16 @@ const Login = ({
         </button>
 
         <div className={loginStyles.kakaologin}>
-          <button type="button" className={loginStyles.kalogin} onClick={handleKakaoLogin}>
-            <img className={loginStyles.kakao} src={kakao} alt="카카오톡 로고" />
+          <button
+            type="button"
+            className={loginStyles.kalogin}
+            onClick={handleKakaoLogin}
+          >
+            <img
+              className={loginStyles.kakao}
+              src={kakao}
+              alt="카카오톡 로고"
+            />
             카카오톡으로 로그인
           </button>
         </div>
