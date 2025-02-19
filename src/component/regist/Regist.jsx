@@ -3,6 +3,7 @@ import axios from "axios";
 import registStyles from "./Regist.module.css";
 import { MdCancel } from "react-icons/md";
 import { FaArrowLeft } from "react-icons/fa6";
+import { config } from "../../config.js"
 
 const Regist = ({ isModalOpen, closeRegistModal, openLoginModal }) => {
   // (아이디, 비밀번호, 비밀번호 확인, 이메일, 닉네임)
@@ -62,7 +63,8 @@ const Regist = ({ isModalOpen, closeRegistModal, openLoginModal }) => {
     // 아이디 중복 체크 요청 (서버 엔드포인트: /auth/username-dupl-chk)
     setIsCheckingUserid(true);
     try {
-      const response = await axios.post('http://localhost:8080/auth/username-dupl-chk', { username: currentUserid });
+      const response = await axios.post(`${config.hosting.ip}:${config.hosting.back_port}/auth/username-dupl-chk`
+, { username: currentUserid });
       console.log("중복체크 응답:", response.data);
       if (!response.data.status) {
         setUseridMessage("이미 사용 중인 아이디입니다.");
@@ -138,7 +140,7 @@ const Regist = ({ isModalOpen, closeRegistModal, openLoginModal }) => {
       return;
     }
     try {
-      const response = await axios.post('http://localhost:8080/auth/send-email', { username: username, receiver: email });
+      const response = await axios.post(`${config.hosting.ip}:${config.hosting.back_port}/auth/send-email`, { username: username, receiver: email });
       if (response.data.status) {
         setCodeMessage("인증번호가 전송되었습니다. 이메일을 확인해주세요.");
         setShowVerificationInput(true);
@@ -157,7 +159,7 @@ const Regist = ({ isModalOpen, closeRegistModal, openLoginModal }) => {
       return;
     }
     try {
-      const response = await axios.post('http://localhost:8080/auth/verify-email', { username: username, auth_number: emailverificationCode });
+      const response = await axios.post(`${config.hosting.ip}:${config.hosting.back_port}/auth/verify-email`, { username: username, auth_number: emailverificationCode });
       console.log("이메일 인증 응답:", response.data);
       if (response.data.status) {
         setCodeMessage("인증번호가 확인되었습니다.");
@@ -203,7 +205,7 @@ const Regist = ({ isModalOpen, closeRegistModal, openLoginModal }) => {
   const handleSubmitRegistration = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8080/auth/create", {
+      const response = await axios.post(`${config.hosting.ip}:${config.hosting.back_port}/auth/create`, {
         username: username,
         password: password,
         email: email,
