@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import loginStyles from "./Login.module.css";
 import logo from "../../asset/logo.png";
@@ -7,7 +7,7 @@ import { config } from "../../config.js";
 import { AuthContext } from "../../AuthContext.js"; // AuthContext import
 import { MdCancel } from "react-icons/md";
 
-const Login = ({ isModalOpen, closeLoginModal, openRegistModal }) => {
+const Login = ({ isModalOpen, closeLoginModal, openRegistModal, }) => {
   const navigate = useNavigate();
 
   // AuthContext에서 login 함수를 가져옴
@@ -15,6 +15,15 @@ const Login = ({ isModalOpen, closeLoginModal, openRegistModal }) => {
 
   const [username, setUserId] = useState("");
   const [password, setPassword] = useState("");
+
+  // 로그아웃후 재로그인시 입력값 초기화
+  useEffect(() => {
+    if (!isModalOpen) {
+      setUserId("");
+      setPassword("");
+    }
+  }, [isModalOpen]);
+
 
   // 로그인 버튼 클릭 시 처리
   const handleLogin = async () => {
@@ -83,21 +92,11 @@ const Login = ({ isModalOpen, closeLoginModal, openRegistModal }) => {
           onClick={closeLoginModal}
         ></MdCancel>
 
-        <input
-          type="text"
-          placeholder="아이디"
-          value={username}
-          onChange={(e) => setUserId(e.target.value)}
-          className={loginStyles.loginid}
-        />
+        <input type="text" placeholder="아이디" value={username} 
+        onChange={(e) => setUserId(e.target.value)} className={loginStyles.loginid} />
 
-        <input
-          type="password"
-          placeholder="비밀번호"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className={loginStyles.loginpw}
-        />
+        <input type="password" placeholder="비밀번호" value={password}
+        onChange={(e) => setPassword(e.target.value)} className={loginStyles.loginpw} />
 
         <button className={loginStyles.LoginModalButton} onClick={handleLogin}>
           로그인
