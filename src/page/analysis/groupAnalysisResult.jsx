@@ -3,17 +3,17 @@ import { Common } from "../../component/home/common";
 import html2canvas from "html2canvas";
 import styles from "./groupAnalysisResult.module.css";
 import WordCloud from "../../component/analysis/wordCloud";
-import StyleChart from "../../component/analysis/styleChart";
 import TopTalker from "../../component/analysis/topTalker";
 import UploadComponent from "../bindly/upload";
 import Button from "../../component/bindly/button";
+import HashTag from "../../component/analysis/hashTag";
 
 const tempData = {
-    conversationStyle: {
-        empathy: 30,
-        direct: 40,
-        logic: 35,
-        humor: 50,
+    hashtag: {
+        food: '음식',
+        travel: '여행',
+        humor: '유머',
+        chat: '잡담'
     },
     keywords: [
         { text: "안녕하세요", value: 50 },
@@ -80,7 +80,7 @@ const GroupAnalysisResult = () => {
                                     <WordCloud words={tempData.keywords} />
                                 </div>
                                 <div className={styles.chartSection}>
-                                    <StyleChart data={tempData.conversationStyle} />
+                                    <HashTag hashtag={tempData.hashtag} />
                                 </div>
                                 <div className={styles.talkerSection}>
                                     <TopTalker talkers={tempData.talkers} />
