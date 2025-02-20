@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import "./sidebar.css";
 import Rab from "../../asset/rabbit.png";
 import { AuthContext } from "../../AuthContext";
-import { config } from "../../config.js"
+import { config } from "../../config.js";
 
 const Sidebar = () => {
   const { isLoggedIn } = useContext(AuthContext);
@@ -14,13 +14,13 @@ const Sidebar = () => {
     {
       _id: 1,
       title: "더미 대화 1",
-      createdAt: "2025-03-01T09:00:00Z"
+      createdAt: "2025-03-01T09:00:00Z",
     },
     {
       _id: 2,
       title: "더미 대화 2",
-      createdAt: "2025-03-01T09:00:00Z"
-    }
+      createdAt: "2025-03-01T09:00:00Z",
+    },
   ];
 
   // 선택된 채팅방 (UI 하이라이트용)
@@ -36,9 +36,9 @@ const Sidebar = () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({})
+      body: JSON.stringify({}),
     })
       .then((res) => {
         if (!res.ok) {
@@ -59,6 +59,40 @@ const Sidebar = () => {
       });
   }, [isLoggedIn]);
 
+  // selectedChat 변경 시 채팅내용 표출
+  useEffect(() => {
+    if (!isLoggedIn) return;
+    console.log("selectedChat: ", selectedChat);
+
+    const token = localStorage.getItem("token");
+
+    fetch(`${config.hosting.ip}:${config.hosting.back_port}/chat/detail`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ objectId: selectedChat }),
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((data) => {
+        // 응답 예시: { status: true, data: [ { chatsObjectId, title, createdAt }, ... ] }
+        if (data.status) {
+          console.log(data.data);
+        } else {
+          console.error("서버 에러:", data.message);
+        }
+      })
+      .catch((err) => {
+        console.error("채팅 불러오기 실패:", err);
+      });
+  }, [selectedChat]);
+
   // 실제로 표시할 리스트: 로그인 시 -> DB 목록, 비로그인 시 -> 더미 목록
   const conversationList = isLoggedIn ? chatList : dummyList;
 
@@ -69,7 +103,9 @@ const Sidebar = () => {
     const month = ("0" + (date.getMonth() + 1)).slice(-2);
     const day = ("0" + date.getDate()).slice(-2);
     const dayOfWeekIndex = date.getDay(); // 0: 일 ~ 6: 토
-    const dayOfWeekKor = ["일", "월", "화", "수", "목", "금", "토"][dayOfWeekIndex];
+    const dayOfWeekKor = ["일", "월", "화", "수", "목", "금", "토"][
+      dayOfWeekIndex
+    ];
     return `${year}. ${month}. ${day}(${dayOfWeekKor})`;
   }
 
@@ -101,7 +137,9 @@ const Sidebar = () => {
                   if (index === 0) {
                     showDateSection = true;
                   } else {
-                    const prevDate = formatDate(conversationList[index - 1].createdAt);
+                    const prevDate = formatDate(
+                      conversationList[index - 1].createdAt
+                    );
                     if (prevDate !== currentDate) {
                       showDateSection = true;
                     }
@@ -118,8 +156,14 @@ const Sidebar = () => {
                       )}
                       <li className="menu-item">
                         <button
-                          className={`menu-text ${selectedChat === (chat.chatsObjectId || chat._id) ? "active" : ""}`}
-                          onClick={() => setSelectedChat(chat.chatsObjectId || chat._id)}
+                          className={`menu-text ${
+                            selectedChat === (chat.chatsObjectId || chat._id)
+                              ? "active"
+                              : ""
+                          }`}
+                          onClick={() =>
+                            setSelectedChat(chat.chatsObjectId || chat._id)
+                          }
                         >
                           {chat.title}
                         </button>
