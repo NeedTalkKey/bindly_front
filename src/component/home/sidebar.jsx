@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import "./sidebar.css";
 import Rab from "../../asset/rabbit.png";
 import { AuthContext } from "../../AuthContext";
+import { config } from "../../config.js"
 
 const Sidebar = () => {
   const { isLoggedIn } = useContext(AuthContext);
@@ -29,13 +30,9 @@ const Sidebar = () => {
   useEffect(() => {
     if (!isLoggedIn) return;
 
-    // 로컬 스토리지에서 필요한 값 가져오기
     const token = localStorage.getItem("token");
-    const nickname = localStorage.getItem("nickname");
-    const user_model = localStorage.getItem("user_model");
 
-    // fetch로 POST 요청 - 헤더에 토큰, nickname, user_model 전부 담아서 전송
-    fetch("http://localhost:8080/chat/list", {
+    fetch(`${config.hosting.ip}:${config.hosting.back_port}/chat/list`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

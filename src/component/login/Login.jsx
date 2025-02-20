@@ -4,7 +4,7 @@ import loginStyles from "./Login.module.css";
 import logo from "../../asset/logo.png";
 import kakao from "../../asset/Kakao_logo.png";
 import { config } from "../../config.js";
-import { AuthContext } from "../../AuthContext.js"; // AuthContext import
+import { AuthContext } from "../../AuthContext.js";
 import { MdCancel } from "react-icons/md";
 
 const Login = ({ isModalOpen, closeLoginModal, openRegistModal, }) => {
@@ -37,7 +37,7 @@ const Login = ({ isModalOpen, closeLoginModal, openRegistModal, }) => {
   // 로그인 API 호출
   const fetchLogin = async () => {
     try {
-      const response = await fetch("http://localhost:8080/auth/login", {
+      const response = await fetch(`${config.hosting.ip}:${config.hosting.back_port}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),

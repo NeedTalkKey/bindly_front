@@ -7,6 +7,7 @@ function getEnvValueWithDefault(key, defaultValue = undefined) {
       front_port: getEnvValueWithDefault("REACT_APP_FRONT_PORT"),
       back_port: getEnvValueWithDefault("REACT_APP_BACK_PORT"),
       model_port: getEnvValueWithDefault("REACT_APP_MODEL_PORT"),
+      ip: getEnvValueWithDefault("REACT_APP_IP")
     },
     db: {
       url: getEnvValueWithDefault("REACT_APP_MONGO_URL"),

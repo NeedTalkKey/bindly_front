@@ -6,13 +6,12 @@ import "./ChatLayout.css";
 import Rabbit from "../../asset/rabbit.png";
 import { MdCancel } from "react-icons/md";
 import { AuthContext } from "../../AuthContext";
+import { config } from "../../config.js";
 
 export const Chat = ({ onClose }) => {
   const { isLoggedIn } = useContext(AuthContext);
 
-  // ---------------------------------------
-  // (A) 비회원에게 보여줄 더미 메시지
-  // ---------------------------------------
+  // 비회원에게 보여줄 더미 메시지
   const dummyMessages = (
     <>
       {/* Message In */}
@@ -45,28 +44,21 @@ export const Chat = ({ onClose }) => {
     </>
   );
 
-  // ---------------------------------------
-  // (B) DB에서 가져온 대화 내용을 담을 state
-  // ---------------------------------------
   const [messages, setMessages] = useState([]);
 
-  // ---------------------------------------
-  // (C) 특정 채팅(chatId)을 DB에서 불러오기 (POST)
-  //     - chatId는 실제 상황에 따라 props나 URL 파라미터 등으로 전달받을 수 있음
-  //     - 헤더에 token, nickname, user_model을 담아 전송
-  // ---------------------------------------
+  // 특정 채팅(detail)을 DB에서 불러오기 (POST)
   useEffect(() => {
-    if (!isLoggedIn) return; // 비회원이면 DB 요청 X
+    if (!isLoggedIn) return;
 
     const token = localStorage.getItem("token");
 
-    fetch(`http://localhost:8080/chat/detail`, {
+    fetch(`${config.hosting.ip}:${config.hosting.back_port}/chat/detail`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
+        "Authorization": `Bearer ${token}`
       },
-      body: JSON.stringify({}) // 빈 객체 전송
+      body: JSON.stringify({})
     })
       .then((res) => {
         if (!res.ok) {
@@ -75,24 +67,18 @@ export const Chat = ({ onClose }) => {
         return res.json();
       })
       .then((chatData) => {
-        // chatData.messages => [{ aiMessage, userMessage, timestamp }, ...]
         if (!chatData || !chatData.messages) return;
 
-        // (D) DB의 messagePair (aiMessage, userMessage)를
-        //     프론트용 배열 (role, content)로 변환
+        // 메시지 쌍을 평탄화 (flatten)
         const flattenedMessages = [];
         chatData.messages.forEach((pair) => {
-          // AI 메시지
           flattenedMessages.push({
             role: "ai",
             content: pair.aiMessage,
-            timestamp: pair.timestamp,
           });
-          // User 메시지
           flattenedMessages.push({
             role: "user",
             content: pair.userMessage,
-            timestamp: pair.timestamp,
           });
         });
         setMessages(flattenedMessages);
@@ -102,9 +88,7 @@ export const Chat = ({ onClose }) => {
       });
   }, [isLoggedIn]);
 
-  // ---------------------------------------
-  // (E) 단계별 로직 (기존 코드 그대로)
-  // ---------------------------------------
+  // 단계별 로직 (기존 코드 그대로)
   const [step, setStep] = useState(1);
   const [title, setTitle] = useState("");
 
@@ -133,52 +117,46 @@ export const Chat = ({ onClose }) => {
     ]
   };
 
-  // (F) 사용자 버튼 클릭 시 메시지 추가
+  // 사용자 버튼 클릭 시 메시지 추가
   const handleUserClick = (btn) => {
     if (!isLoggedIn) {
       alert("로그인이 필요한 서비스입니다.");
       return;
     }
 
-    // 사용자 메시지 추가
+    // 사용자가 버튼을 클릭하면 해당 메시지를 추가합니다.
     const userMessage = {
       role: "user",
       content: btn.text,
-      timestamp: new Date().toLocaleString()
     };
     setMessages((prev) => [...prev, userMessage]);
 
-    // 단계 변경
     if (btn.next === 999) {
       handleEndConversation();
       return;
     }
     setStep(btn.next);
 
-    // 다음 AI 질문 추가
     const nextAiQuestion = aiQuestions[btn.next];
     if (nextAiQuestion) {
       const aiMessage = {
         role: "ai",
         content: nextAiQuestion,
-        timestamp: new Date().toLocaleString()
       };
       setMessages((prev) => [...prev, aiMessage]);
     }
   };
 
-  // (G) 대화 종료 시 로직
+  // 대화 종료 시 로직
   const handleEndConversation = () => {
     console.log("대화 종료 및 저장:", { title, messages });
     alert("대화가 저장되었습니다. (콘솔 확인)");
 
-    // 필요 시 서버에 POST 저장 로직 (예: fetch로 "/chat/create" 호출)
-    // 이후 상태 초기화
+    // 대화 종료 후 초기화
     setMessages([
       {
         role: "ai",
         content: "누구의 피드백으로 듣고 싶어?",
-        timestamp: new Date().toLocaleString()
       }
     ]);
     setStep(1);
@@ -201,15 +179,11 @@ export const Chat = ({ onClose }) => {
               <div className="sidebar-wrapper">
                 <Sidebar />
               </div>
-
               <div className={"chat-content-wrapper " + (!isLoggedIn ? "blurred" : "")}>
                 <MdCancel className="close-icon" onClick={onClose} />
-
                 <div className="card-body chat-body">
                   <div className="messages">
-                    {/* (H) 로그인 여부에 따라 다른 메시지 출력 */}
                     {isLoggedIn ? (
-                      // 회원 → DB에서 불러온 실제 메시지
                       messages.map((msg, idx) => (
                         <div key={idx}>
                           {msg.role === "ai" ? (
@@ -227,31 +201,22 @@ export const Chat = ({ onClose }) => {
                               </div>
                               <div className="message-content rounded p-5 text-dark-50 font-weight-bold font-size-lg text-left max-w-400px">
                                 {msg.content}
-                                <div style={{ fontSize: "0.8rem", color: "#aaa", marginTop: "4px" }}>
-                                  {msg.timestamp}
-                                </div>
                               </div>
                             </div>
                           ) : (
                             <div className="message you d-flex flex-row align-items-end justify-content-end mb-5">
                               <div className="message-content rounded p-5 text-dark-50 font-weight-bold font-size-lg text-right max-w-400px">
                                 {msg.content}
-                                <div style={{ fontSize: "0.8rem", color: "#aaa", marginTop: "4px" }}>
-                                  {msg.timestamp}
-                                </div>
                               </div>
                             </div>
                           )}
                         </div>
                       ))
                     ) : (
-                      // 비회원 → 더미 메시지
                       dummyMessages
                     )}
                   </div>
                 </div>
-
-                {/* 푸터 영역 */}
                 <div className="card-footer d-flex flex-column align-items-center justify-content-center">
                   {step === 4 && (
                     <div style={{ width: "100%", textAlign: "center", marginBottom: "10px" }}>
@@ -264,7 +229,6 @@ export const Chat = ({ onClose }) => {
                       />
                     </div>
                   )}
-
                   <div className="d-flex justify-content-center">
                     {buttonStages[step] &&
                       buttonStages[step].map((btn, index) => (
@@ -280,8 +244,6 @@ export const Chat = ({ onClose }) => {
                   </div>
                 </div>
               </div>
-
-              {/* 비회원 안내 오버레이 (로그인 유도) */}
               {!isLoggedIn && (
                 <div className="login-overlay active">
                   <p>로그인이 필요한 서비스입니다.</p>
@@ -294,3 +256,5 @@ export const Chat = ({ onClose }) => {
     </Common>
   );
 };
+
+export default Chat;
