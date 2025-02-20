@@ -13,12 +13,10 @@ import Button from "../../component/bindly/button";
 import { Chat } from "../home/Chat";
 
 const tempData = {
-    userName: "박지호",
-    partnerName: "김남형",
-    userScore: 40,
-    partnerScore: 42,
-    totalScore: 82,
-    conversationStyle: {
+    userName: "박치호",
+    partnerName: "박건우",
+    totalScore: 60,
+    conversationStyle: { // convaersationStyle은 그대로 아래 요소 변경예정
         empathy: 35,
         direct: 25,
         logic: 20,
@@ -28,6 +26,9 @@ const tempData = {
     partnerReplyTime: 10,
     userMessageCount: 120,
     partnerMessageCount: 140,
+
+    relationship: '연인', // 관계 예측 임시데이터
+
     keywords: [
         { text: "친구", value: 60 },
         { text: "안녕하세요", value: 45 },
@@ -90,12 +91,10 @@ const AnalysisResult = () => {
                                 <h2 className={styles.title}>분석결과(1:1 대화)</h2>
                                 <p className={styles.description}>{description}</p>
                             </div>
-
-                            {/* 캡처할 영역 */}
                             <div className={styles.resultLayout}>
                                 <div className={styles.leftContainer}>
                                     <div className={styles.leftSection}>
-                                        <FriendshipMessage userScore={tempData.userScore} partnerScore={tempData.partnerScore} setDescription={setDescription} />
+                                        <FriendshipMessage data={tempData} setDescription={setDescription} />
                                     </div>
                                     <div className={styles.chartSection}>
                                         <FriendshipScore data={tempData} />
@@ -104,9 +103,9 @@ const AnalysisResult = () => {
 
                                 <div className={styles.analysisGrid}>
                                     <StyleChart data={tempData.conversationStyle} />
-                                    <ReplyTime data={tempData} />
-                                    <WordCloud words={tempData.keywords} />
                                     <MessageCount data={tempData} />
+                                    <WordCloud words={tempData.keywords} />
+                                    <ReplyTime data={tempData} />
                                 </div>
                             </div>
                         </div>

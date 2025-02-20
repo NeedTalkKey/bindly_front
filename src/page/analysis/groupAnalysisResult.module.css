@@ -33,9 +33,9 @@
 .resultLayout {
     display: flex;
     flex-wrap: row;
-    justify-content: center;
     align-items: center;
-    width: 100%;
+    width: 100vh;
+    height: 100%;
 }
 
 /* 📌 워드클라우드, 차트, 랭킹 섹션 - 반응형 적용 */
@@ -43,7 +43,7 @@
     flex: 1;
     width: 100%;
     min-width: 280px;
-    max-width: 500px;
+    max-width: 600px;
     background: #F5ECF2;
     padding: 20px;
     border-radius: 15px;
