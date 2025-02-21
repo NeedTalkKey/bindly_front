@@ -127,6 +127,15 @@
     align-items: center;
     width: 100%;
     gap: 10px;
+    margin-top: 20px;
+}
+
+.buttonTop {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: nowrap;
+    width: 54vw;
 }
 
 .buttonRow {

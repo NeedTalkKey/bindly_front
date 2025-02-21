@@ -42,7 +42,7 @@
 .authContainer {
   display: flex;
   align-items: center;
-  gap: 15px; /* 닉네임 버튼과 로그아웃 버튼 간격 */
+  gap: 15px;
 }
 
 /* 닉네임 버튼 */
@@ -67,7 +67,6 @@
   position: relative;
 }
 
-/* 로그아웃 버튼 hover 시 밑줄 효과 */
 .logout::after {
   content: "";
   display: block;
@@ -85,64 +84,87 @@
   width: 100%;
 }
 
-/* 모달 오버레이 (배경) */
-.modalOverlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 1) !important; /* 반투명 배경 */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1001;
-}
-
-/* 모달 창 */
-.modalContent {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  width: 400px;
-  text-align: center;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-}
-
-/* 닫기 버튼 */
-.closeButton {
-  margin-top: 10px;
-  padding: 10px;
-  border: none;
-  background: #1F3A93;
-  color: white;
-  cursor: pointer;
-  font-size: 16px;
-  border-radius: 5px;
-}
-
-.closeButton:hover {
-  background: #162d5f;
-}
-
 /* 반응형 스타일 */
 @media (max-width: 768px) {
   .header {
     top: 15px;
     right: 20px;
   }
-
   .login {
     font-size: 14px;
     margin-right: 20px;
   }
-
   .logout {
     font-size: 14px;
     margin-right: 20px;
   }
-
   .nicknameBtn {
     font-size: 14px;
   }
+}
+
+/* ─────────────────────────────────────
+   로그아웃 모달 관련 스타일
+   ───────────────────────────────────── */
+.logoutModalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw; /* 화면 전체 덮기 */
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.7); /* 살짝 투명한 검정 배경 */
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logoutModalContent {
+  background-color: #fff;
+  padding: 30px 20px;
+  border-radius: 8px;
+  width: 340px;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* 모달 제목 */
+.logoutTitle {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 24px;
+}
+
+/* 버튼 그룹 (세로 간격) */
+.logoutButtonGroup {
+  display: flex;
+  flex-direction: column; /* 세로 배치 */
+  align-items: center;
+  gap: 12px; /* 버튼 사이 간격 */
+}
+
+/* 검정색(블랙) 버튼 */
+.logoutBlackButton {
+  width: 100%;
+  background-color: #1F3A93;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 14px 0;
+  border: none;
+  border-radius: 24px;
+  cursor: pointer;
+}
+
+/* 흰색 버튼 */
+.logoutWhiteButton {
+  width: 100%;
+  background-color: #fff;
+  color: #000;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 14px 0;
+  border: 1px solid #ddd;
+  border-radius: 24px;
+  cursor: pointer;
 }

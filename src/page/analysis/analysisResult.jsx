@@ -125,7 +125,10 @@ const AnalysisResult = () => {
                         )}
 
                         <div className={styles.buttonContainer}>
-                            <Button className={styles.buttonTop} text="📩 분석 결과 저장하기" onClick={handleSaveAsImage} />
+                            <div className={styles.buttonTop}>
+                                <Button text="📩 분석 결과 저장하기" onClick={handleSaveAsImage} />
+                                <Button text="🔗 공유하기" onClick={handleSaveAsImage} />
+                            </div>
                             <div className={styles.buttonRow}>
                                 <Button text="🔍 다른 대화 분석하기" onClick={handleResetAndUpload} />
                                 <Button text="💬 피드백 톡" className="chat-send" onClick={toggleModal} /> {/* 🚀 버튼 클릭 시 모달 열기 */}

@@ -28,10 +28,10 @@
 
 .modalContent {
     background-color: white !important;
-    padding: 20px;
+    padding: 90px;
     border-radius: 20px;
     text-align: center;
-    width: 320px;
+    width: 450px;
     position: relative;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
@@ -57,16 +57,17 @@
 
 .loginlogo {
     background-color: white !important;
-    width: 180px;
+    width: 200px;
     border-radius: 10px;
+    margin-bottom: 10px;
 }
 
 .loginid, .loginpw {
     width: 100%;
     padding: 12px;
-    background-color: #F5ECF2;
+    background-color: white;
     margin-bottom: 10px;
-    border: 2px solid #ddd;
+    border: 2px solid #1f3a93;
     border-radius: 10px;
     font-size: 16px;
 }
@@ -74,7 +75,7 @@
 .LoginModalButton {
     width: 100%;
     padding: 12px;
-    background-color: #f7a8d2;
+    background-color: #1f3a93;
     color: white;
     border: none;
     border-radius: 10px;
@@ -124,3 +125,34 @@
     margin-right: 8px;
     border-radius: 50%;
 }
+
+.signupContainer {
+    font-size: 15px;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.grayText {
+    color: #999;
+    margin-right: 5px;
+}
+
+.pinkText {
+    color: #1f3a93;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.jbdivisionline {
+    border-top: 2px solid #b9b7b7;;
+    margin: 10px auto;
+    width: 280px;
+    height: 0px;
+}
+
+/* .jbdivisionline:after {
+    /* content: "or";
+    position: relative;
+    top: -13px; */
+    /* left: calc( 50% - 8px );
+} */

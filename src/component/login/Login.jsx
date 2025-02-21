@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import loginStyles from "./Login.module.css";
 import logo from "../../asset/logo.png";
+import textlogo from "../../asset/bindly.png";
 import kakao from "../../asset/Kakao_logo.png";
 import { config } from "../../config.js";
 import { AuthContext } from "../../AuthContext.js";
@@ -84,7 +85,7 @@ const Login = ({ isModalOpen, closeLoginModal, openRegistModal, }) => {
         onClick={(e) => e.stopPropagation()}
       >
         <div className={loginStyles.loginHeader}>
-          <img className={loginStyles.loginlogo} src={logo} alt="Logo" />
+          <img className={loginStyles.loginlogo} src={textlogo} alt="Logo" />
         </div>
 
         <MdCancel
@@ -98,14 +99,15 @@ const Login = ({ isModalOpen, closeLoginModal, openRegistModal, }) => {
         <input type="password" placeholder="비밀번호" value={password}
         onChange={(e) => setPassword(e.target.value)} className={loginStyles.loginpw} />
 
+        <div className={loginStyles.jbdivisionline}></div>
+
+        {/* 로그인 시작 */}
         <button className={loginStyles.LoginModalButton} onClick={handleLogin}>
           로그인
         </button>
+        {/* 로그인 종료 */}
 
-        <button className={loginStyles.RegistModalButton} onClick={goRegist}>
-          회원가입
-        </button>
-
+        {/* 카카오톡 로그인 시작*/}
         <div className={loginStyles.kakaologin}>
           <button
             type="button"
@@ -120,6 +122,17 @@ const Login = ({ isModalOpen, closeLoginModal, openRegistModal, }) => {
             카카오톡으로 로그인
           </button>
         </div>
+        {/* 카카오톡 로그인 종료 */}
+
+        {/* 회원가입 시작 */}
+        <div className={loginStyles.signupContainer}>
+          <span className={loginStyles.grayText}>계정이 없으신가요?</span>
+          <span className={loginStyles.pinkText} onClick={goRegist}>
+            회원가입
+          </span>
+        </div>
+        {/* 회원가입 종료 */}
+
       </div>
     </div>
   );
