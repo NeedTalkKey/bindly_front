@@ -3,41 +3,49 @@ import { Common } from "./common";
 import headerStyles from "./header.module.css";
 import Login from "../login/Login";
 import Regist from "../regist/Regist";
-import { AuthContext } from "../../AuthContext"; // AuthContext import
+import { AuthContext } from "../../AuthContext";
 
 const Header = () => {
-  // AuthContext에서 전역 로그인 상태와 닉네임, 로그아웃 함수를 가져옴
   const { isLoggedIn, nickname, logout } = useContext(AuthContext);
 
-  // 로그인/회원가입 모달 상태는 로컬로 관리
+  // 로그인/회원가입 모달
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isRegistModalOpen, setIsRegistModalOpen] = useState(false);
+
+  // 로그아웃 모달
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
   // 로그인 모달 열기
   const openLoginModal = () => {
     setIsLoginModalOpen(true);
     setIsRegistModalOpen(false);
   };
-
   // 로그인 모달 닫기
   const closeLoginModal = () => {
     setIsLoginModalOpen(false);
   };
-
   // 회원가입 모달 열기
   const openRegistModal = () => {
     setIsRegistModalOpen(true);
     setIsLoginModalOpen(false);
   };
-
   // 회원가입 모달 닫기
   const closeRegistModal = () => {
     setIsRegistModalOpen(false);
   };
 
-  // 로그아웃 시 AuthContext의 logout() 호출
-  const handleLogout = () => {
+  // 로그아웃 버튼 클릭 시
+  const handleLogoutClick = () => {
+    setIsLogoutModalOpen(true);
+  };
+  // 로그아웃 확인
+  const confirmLogout = () => {
     logout();
+    setIsLogoutModalOpen(false);
+  };
+  // 로그아웃 취소
+  const cancelLogout = () => {
+    setIsLogoutModalOpen(false);
   };
 
   return (
@@ -45,8 +53,13 @@ const Header = () => {
       <header className={headerStyles.header}>
         {isLoggedIn ? (
           <div className={headerStyles.authContainer}>
-            <button className={headerStyles.nicknameBtn}>{nickname}님</button>
-            <button className={headerStyles.logout} onClick={handleLogout}>
+            <button className={headerStyles.nicknameBtn}>
+              {nickname}님
+            </button>
+            <button
+              className={headerStyles.logout}
+              onClick={handleLogoutClick}
+            >
               로그아웃
             </button>
           </div>
@@ -61,15 +74,48 @@ const Header = () => {
       <Login
         isModalOpen={isLoginModalOpen}
         closeLoginModal={closeLoginModal}
-        openRegistModal={openRegistModal} // 회원가입 모달 열기
+        openRegistModal={openRegistModal}
       />
 
       {/* 회원가입 모달 */}
-      <Regist 
-        isModalOpen={isRegistModalOpen}   
-        closeRegistModal={closeRegistModal} // 회원가입 모달 닫기
-        openLoginModal={openLoginModal} // 로그인 모달 열기
+      <Regist
+        isModalOpen={isRegistModalOpen}
+        closeRegistModal={closeRegistModal}
+        openLoginModal={openLoginModal}
       />
+
+      {/* 로그아웃 모달 */}
+      {isLogoutModalOpen && (
+        <div
+          className={headerStyles.logoutModalOverlay}
+          onClick={cancelLogout}
+        >
+          <div
+            className={headerStyles.logoutModalContent}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* 가운데 문구 없이 딱 한 줄로만 */}
+            <h2 className={headerStyles.logoutTitle}>
+              정말 로그아웃하시겠습니까?
+            </h2>
+
+            <div className={headerStyles.logoutButtonGroup}>
+              <button
+                className={headerStyles.logoutBlackButton}
+                onClick={confirmLogout}
+              >
+                로그아웃
+              </button>
+              <button
+                className={headerStyles.logoutWhiteButton}
+                onClick={cancelLogout}
+              >
+                취소
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </Common>
   );
 };

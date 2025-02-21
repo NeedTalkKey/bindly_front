@@ -10,125 +10,41 @@ import { config } from "../../config.js";
 
 export const Chat = ({ onClose }) => {
   const { isLoggedIn } = useContext(AuthContext);
-
-  // 비회원에게 보여줄 더미 메시지
-  const dummyMessages = (
-    <>
-      {/* Message In */}
-      <div className="message other d-flex flex-row align-items-start mb-5">
-        <div className="symbol symbol-40 mr-3">
-          <img
-            alt="Pic"
-            src={Rabbit}
-            style={{ width: "40px", height: "40px", borderRadius: "50%" }}
-          />
-        </div>
-        <div className="message-content rounded p-5 text-dark-50 font-weight-bold font-size-lg text-left max-w-400px">
-          아무리 우겨봐도 어쩔 수 없네
-          <br />
-          저기 개똥 무덤이 내 집인걸
-          <br />
-          가슴을 내밀어도 친구가 없네
-          <br />
-          노래하던 새들도 멀리 날아가네
-        </div>
-      </div>
-      {/* Message Out */}
-      <div className="message you d-flex flex-row align-items-end justify-content-end mb-5">
-        <div className="message-content rounded p-5 text-dark-50 font-weight-bold font-size-lg text-right max-w-400px">
-          가지 마라 가지 마라 가지 말아라
-          <br />
-          나를 위해 한 번만 노래를 해주렴
-        </div>
-      </div>
-    </>
-  );
-
   const [messages, setMessages] = useState([]);
-
-  // 특정 채팅(detail)을 DB에서 불러오기 (POST)
-  useEffect(() => {
-    if (!isLoggedIn) return;
-
-    const token = localStorage.getItem("token");
-
-    fetch(`${config.hosting.ip}:${config.hosting.back_port}/chat/detail`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
-      },
-      body: JSON.stringify({})
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
-        return res.json();
-      })
-      .then((chatData) => {
-        if (!chatData || !chatData.messages) return;
-
-        // 메시지 쌍을 평탄화 (flatten)
-        const flattenedMessages = [];
-        chatData.messages.forEach((pair) => {
-          flattenedMessages.push({
-            role: "ai",
-            content: pair.aiMessage,
-          });
-          flattenedMessages.push({
-            role: "user",
-            content: pair.userMessage,
-          });
-        });
-        setMessages(flattenedMessages);
-      })
-      .catch((error) => {
-        console.error("대화 불러오기 에러:", error);
-      });
-  }, [isLoggedIn]);
-
-  // 단계별 로직 (기존 코드 그대로)
-  const [step, setStep] = useState(1);
+  const [selectedChatId, setSelectedChatId] = useState(null);
   const [title, setTitle] = useState("");
+  const [step, setStep] = useState(1);
 
+  // 대화 진행 관련 예시 메시지
   const aiQuestions = {
     1: "누구의 피드백으로 듣고 싶어?",
     2: "피드백으로 듣고 싶은 성향을 알려줄래?",
     3: "추가로 궁금한 점이 있니?",
-    4: "대화가 종료되었습니다. 종료 버튼을 누르면 대화를 저장할 수 있어요."
+    4: "대화가 종료되었습니다. 종료 버튼을 누르면 대화를 저장할 수 있어요.",
   };
-
   const buttonStages = {
     1: [
       { text: "이름1", next: 2 },
-      { text: "이름2", next: 2 }
+      { text: "이름2", next: 2 },
     ],
     2: [
       { text: "공감", next: 3 },
-      { text: "팩폭", next: 3 }
+      { text: "팩폭", next: 3 },
     ],
     3: [
       { text: "긍정적인 대화", next: 4 },
-      { text: "부정적인 대화", next: 4 }
+      { text: "부정적인 대화", next: 4 },
     ],
-    4: [
-      { text: "대화 종료하기", next: 999 }
-    ]
+    4: [{ text: "대화 종료하기", next: 999 }],
   };
 
-  // 사용자 버튼 클릭 시 메시지 추가
+  // 사용자의 버튼 클릭 처리 (예시)
   const handleUserClick = (btn) => {
     if (!isLoggedIn) {
       alert("로그인이 필요한 서비스입니다.");
       return;
     }
-
-    // 사용자가 버튼을 클릭하면 해당 메시지를 추가합니다.
-    const userMessage = {
-      role: "user",
-      content: btn.text,
-    };
+    const userMessage = { role: "user", content: btn.text };
     setMessages((prev) => [...prev, userMessage]);
 
     if (btn.next === 999) {
@@ -136,32 +52,59 @@ export const Chat = ({ onClose }) => {
       return;
     }
     setStep(btn.next);
-
     const nextAiQuestion = aiQuestions[btn.next];
     if (nextAiQuestion) {
-      const aiMessage = {
-        role: "ai",
-        content: nextAiQuestion,
-      };
+      const aiMessage = { role: "ai", content: nextAiQuestion };
       setMessages((prev) => [...prev, aiMessage]);
     }
   };
 
-  // 대화 종료 시 로직
   const handleEndConversation = () => {
     console.log("대화 종료 및 저장:", { title, messages });
     alert("대화가 저장되었습니다. (콘솔 확인)");
-
-    // 대화 종료 후 초기화
-    setMessages([
-      {
-        role: "ai",
-        content: "누구의 피드백으로 듣고 싶어?",
-      }
-    ]);
+    setMessages([{ role: "ai", content: "누구의 피드백으로 듣고 싶어?" }]);
     setStep(1);
     setTitle("");
   };
+
+  // 선택된 채팅 ID가 변경될 때마다 해당 채팅 상세 내용 불러오기
+  useEffect(() => {
+    if (!isLoggedIn) return;
+    if (!selectedChatId) {
+      setMessages([]);
+      return;
+    }
+    const token = localStorage.getItem("token");
+    fetch(`${config.hosting.ip}:${config.hosting.back_port}/chat/detail`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
+      body: JSON.stringify({ objectId: selectedChatId }),
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+        return res.json();
+      })
+      .then((chatData) => {
+        if (!chatData || !chatData.data || !chatData.data.messages) {
+          setMessages([]);
+          return;
+        }
+        const chat = chatData.data;
+        // 메시지 쌍을 평탄화
+        const flattenedMessages = [];
+        chat.messages.forEach((pair) => {
+          flattenedMessages.push({ role: "ai", content: pair.aiMessage });
+          flattenedMessages.push({ role: "user", content: pair.userMessage });
+        });
+        setMessages(flattenedMessages);
+      })
+      .catch((error) => {
+        console.error("대화 불러오기 에러:", error);
+      });
+  }, [selectedChatId, isLoggedIn]);
 
   return (
     <Common>
@@ -177,7 +120,7 @@ export const Chat = ({ onClose }) => {
           <div className="modal-dialog modal-dialog-centered" role="document">
             <div className="modal-content custom-layout">
               <div className="sidebar-wrapper">
-                <Sidebar />
+                <Sidebar onSelectChat={setSelectedChatId} selectedChatId={selectedChatId} />
               </div>
               <div className={"chat-content-wrapper " + (!isLoggedIn ? "blurred" : "")}>
                 <MdCancel className="close-icon" onClick={onClose} />
@@ -195,7 +138,7 @@ export const Chat = ({ onClose }) => {
                                   style={{
                                     width: "40px",
                                     height: "40px",
-                                    borderRadius: "50%"
+                                    borderRadius: "50%",
                                   }}
                                 />
                               </div>
@@ -213,7 +156,7 @@ export const Chat = ({ onClose }) => {
                         </div>
                       ))
                     ) : (
-                      dummyMessages
+                      <p>로그인이 필요한 서비스입니다.</p>
                     )}
                   </div>
                 </div>
