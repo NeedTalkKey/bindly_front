@@ -26,4 +26,10 @@ function getEnvValueWithDefault(key, defaultValue = undefined) {
       rest_api_key: getEnvValueWithDefault("REACT_APP_REST_API_KEY"),
       redirect_uri: getEnvValueWithDefault("REACT_APP_REDIRECT_URI"),
     },
+    cloudinary: {
+      cloudName: getEnvValueWithDefault("REACT_APP_CLOUDINARY_CLOUD_NAME"),
+      apiKey: getEnvValueWithDefault("REACT_APP_CLOUDINARY_API_KEY"),
+      apiSecret: getEnvValueWithDefault("REACT_APP_CLOUDINARY_API_SECRET"),
+      uploadPreset: getEnvValueWithDefault("REACT_APP_CLOUDINARY_UPLOAD_PRESET")
+    },
   };
