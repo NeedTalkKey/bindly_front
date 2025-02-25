@@ -1,3 +1,4 @@
+// analysisResult.jsx
 import React, { useState, useEffect, useContext } from "react";
 import { Common } from "../../component/home/common";
 import html2canvas from "html2canvas";
@@ -36,17 +37,27 @@ const tempData = {
     { text: "안녕하세요", value: 45 },
     // ...
   ],
+  // 분석 단계에서 반환된 전체 대화 텍스트 예시
+  normalizedText: `[u1] ㅋㅋㅋㅋㅋㅋㅋ 설마;; 10달라
+[u2] 아놀래라
+10만원 넣었으면 난 전부 gpt로 돌리지
+그건그치
+하 햇빛 쬐서 그런가 몸에 기운이 없냐 근데 진짜 빛 쬐면 몸에 힘이 빠진다니까?
+뭔
+이게 물리적으로 진짜 빠짐
+흡혈귀여\\
+농담같지 진짜야 진짜 그냥 축 쳐짐 그리고 갑자기 밝아지면 기침나오고 그럼`
 };
 
 const AnalysisResult = ({ analysisData }) => {
   const { isLoggedIn } = useContext(AuthContext);
 
-  // 업로드 화면(true) vs 분석 결과 화면(false)를 구분하는 상태 (초기값 false: 결과 화면 표시)
+  // 업로드 화면(true) vs 분석 결과 화면(false)를 구분하는 상태
   const [showUpload, setShowUpload] = useState(false);
-  // 회원이었던 상태를 추적해서, 로그아웃 이벤트만 감지하기 위한 상태
+  // 회원 상태 추적
   const [wasLoggedIn, setWasLoggedIn] = useState(isLoggedIn);
 
-  // 나머지 내부 상태들
+  // 내부 상태
   const [description, setDescription] = useState("");
   const [fileName, setFileName] = useState("");
   const [showInput, setShowInput] = useState(false);
@@ -60,14 +71,10 @@ const AnalysisResult = ({ analysisData }) => {
     window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
   }, []);
 
-  /**
-   * 회원이 로그아웃(즉, wasLoggedIn가 true였다가 isLoggedIn이 false로 변할 때)하면
-   * showUpload를 true로 전환하여 업로드 화면으로 강제 전환한다.
-   */
+  // 로그아웃 감지 (필요한 경우)
   useEffect(() => {
     if (wasLoggedIn && !isLoggedIn) {
       setShowUpload(true);
-      // 필요 시 내부 상태 초기화
       setDescription("");
       setFileName("");
       setShowInput(false);
@@ -77,7 +84,7 @@ const AnalysisResult = ({ analysisData }) => {
     setWasLoggedIn(isLoggedIn);
   }, [isLoggedIn, wasLoggedIn]);
 
-  // 업로드 완료 시 호출되는 콜백 (UploadComponent에서 반드시 호출)
+  // 업로드 완료 시 콜백
   const handleUploadComplete = () => {
     setShowUpload(false);
   };
@@ -119,7 +126,6 @@ const AnalysisResult = ({ analysisData }) => {
       const canvas = await html2canvas(content, { scale: 2 });
       const dataUrl = canvas.toDataURL("image/png");
 
-      // Cloudinary 업로드
       const formData = new FormData();
       formData.append("file", dataUrl);
       formData.append("upload_preset", config.cloudinary.uploadPreset);
@@ -148,19 +154,18 @@ const AnalysisResult = ({ analysisData }) => {
     }
   };
 
-  // 업로드 화면이 보이는 경우 (회원이든 비회원이든 업로드 완료 전이거나, 회원이 로그아웃되어 강제 전환된 경우)
+  // 업로드 화면이 보이는 경우
   if (showUpload) {
     return (
       <Common>
         <div className={styles.analysisContainer}>
-          {/* UploadComponent에서 업로드 완료 시 onUploadComplete 콜백 호출 */}
           <UploadComponent onUploadComplete={handleUploadComplete} />
         </div>
       </Common>
     );
   }
 
-  // 업로드 완료 후 분석 결과 화면 렌더링
+  // 분석 결과 화면 렌더링
   return (
     <Common>
       <div className={styles.analysisContainer}>
@@ -206,10 +211,15 @@ const AnalysisResult = ({ analysisData }) => {
           </div>
           <div className={styles.buttonRow}>
             <Button text="🔍 다른 대화 분석하기" onClick={handleResetAndUpload} />
+            {/* "💬 피드백 톡" 버튼 클릭 시 모달로 Chat 컴포넌트를 띄움 */}
             <Button text="💬 피드백 톡" onClick={toggleModal} />
-            {isModalOpen && <Chat onClose={toggleModal} />}
           </div>
         </div>
+
+        {isModalOpen && (
+          // Chat 컴포넌트에 분석된 전체 대화(normalizedText)를 conversationText로 전달
+          <Chat onClose={toggleModal} conversationText={data.normalizedText} speakerMapping={data.speakerMapping}/>
+        )}
       </div>
     </Common>
   );
