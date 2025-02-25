@@ -13,6 +13,7 @@ import Button from "../../component/bindly/button";
 import { Chat } from "../home/Chat";
 import { config } from "../../config"; // config 가져오기
 
+// [1] 가짜 데이터 (fallback)
 const tempData = {
   userName: "박치호",
   partnerName: "박건우",
@@ -31,40 +32,33 @@ const tempData = {
   keywords: [
     { text: "친구", value: 60 },
     { text: "안녕하세요", value: 45 },
-    { text: "대화", value: 40 },
-    { text: "재밌다", value: 25 },
-    { text: "월요일", value: 20 },
-    { text: "약속속", value: 70 },
-    { text: "약약속", value: 20 },
-    { text: "화요일", value: 30 },
-    { text: "금요일", value: 55 },
-    { text: "내일", value: 10 },
+    // ...
   ],
 };
 
-const AnalysisResult = () => {
+const AnalysisResult = ({ analysisData }) => {
+  // [2] analysisData가 없으면 tempData를 쓰고, 있으면 그걸 사용
+  const data = analysisData || tempData;
+
   const [description, setDescription] = useState("");
   const [fileName, setFileName] = useState("");
   const [showInput, setShowInput] = useState(false);
   const [showUpload, setShowUpload] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false); // Chat 모달 상태
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
 
-  // 컴포넌트 마운트 시 자동으로 페이지 하단으로 스크롤 (분석 결과 영역이 바로 보이도록)
   useEffect(() => {
     window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
   }, []);
 
-  // 파일명 입력창 표시
   const handleSaveAsImage = () => {
     setShowInput(true);
   };
 
-  // 로컬 저장
   const captureScreenAndDownload = () => {
     if (!fileName) {
       alert("파일명을 입력해주세요.");
@@ -80,21 +74,18 @@ const AnalysisResult = () => {
     });
   };
 
-  // 다른 대화 분석하기
   const handleResetAndUpload = () => {
     setShowUpload(true);
   };
 
-  // 공유하기 (자동 복사)
   const handleShare = async () => {
     setIsSharing(true);
     try {
-      // 1) DOM 캡처
       const content = document.getElementById("captureArea");
       const canvas = await html2canvas(content, { scale: 2 });
       const dataUrl = canvas.toDataURL("image/png");
 
-      // 2) Cloudinary 업로드
+      // Cloudinary 업로드
       const formData = new FormData();
       formData.append("file", dataUrl);
       formData.append("upload_preset", config.cloudinary.uploadPreset);
@@ -111,15 +102,12 @@ const AnalysisResult = () => {
         throw new Error("Cloudinary 업로드 실패");
       }
 
-      // 3) 공유 링크 생성
+      // 링크 생성 후 복사
       const shareLink = `${window.location.origin}/share?imgUrl=${encodeURIComponent(
         json.secure_url
       )}`;
-
-      // 4) 자동 복사
       await navigator.clipboard.writeText(shareLink);
       alert("링크가 복사되었습니다!");
-
     } catch (error) {
       console.error("공유하기 실패:", error);
       alert("공유하기에 실패했습니다.");
@@ -143,17 +131,19 @@ const AnalysisResult = () => {
               <div className={styles.resultLayout}>
                 <div className={styles.leftContainer}>
                   <div className={styles.leftSection}>
-                    <FriendshipMessage data={tempData} setDescription={setDescription} />
+                    {/* 예: 우선 Message나 Score 컴포넌트 등에 data를 그대로 넘김 */}
+                    <FriendshipMessage data={data} setDescription={setDescription} />
                   </div>
                   <div className={styles.chartSection}>
-                    <FriendshipScore data={tempData} />
+                    <FriendshipScore data={data} />
                   </div>
                 </div>
+
                 <div className={styles.analysisGrid}>
-                  <StyleChart data={tempData.conversationStyle} />
-                  <MessageCount data={tempData} />
-                  <WordCloud words={tempData.keywords} />
-                  <ReplyTime data={tempData} />
+                  {/* <StyleChart data={data.conversationStyle} /> */}
+                  <MessageCount data={data} />
+                  {/* <WordCloud words={data.keywords} /> */}
+                  {/* <ReplyTime data={data} /> */}
                 </div>
               </div>
             </div>
