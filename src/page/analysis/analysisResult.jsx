@@ -1,19 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Common } from "../../component/home/common";
 import html2canvas from "html2canvas";
 import styles from "./analysisResult.module.css";
 import FriendshipMessage from "../../component/analysis/friendshipMessage";
 import FriendshipScore from "../../component/analysis/friendshipScore";
-import StyleChart from "../../component/analysis/styleChart";
-import ReplyTime from "../../component/analysis/replyTime";
 import MessageCount from "../../component/analysis/messageCount";
-import WordCloud from "../../component/analysis/wordCloud";
 import UploadComponent from "../bindly/upload";
 import Button from "../../component/bindly/button";
 import { Chat } from "../home/Chat";
-import { config } from "../../config"; // config 가져오기
+import { config } from "../../config";
+import { AuthContext } from "../../AuthContext";
 
-// [1] 가짜 데이터 (fallback)
+// Chart.js 관련 요소 등록 (v3 이상부터는 수동 등록 필요)
+import { Chart, ArcElement, Tooltip, Legend } from "chart.js";
+Chart.register(ArcElement, Tooltip, Legend);
+
+// [1] 임시 데이터 (fallback)
 const tempData = {
   userName: "박치호",
   partnerName: "박건우",
@@ -37,24 +39,59 @@ const tempData = {
 };
 
 const AnalysisResult = ({ analysisData }) => {
-  // [2] analysisData가 없으면 tempData를 쓰고, 있으면 그걸 사용
-  const data = analysisData || tempData;
+  const { isLoggedIn } = useContext(AuthContext);
 
+  // 업로드 화면(true) vs 분석 결과 화면(false)를 구분하는 상태 (초기값 false: 결과 화면 표시)
+  const [showUpload, setShowUpload] = useState(false);
+  // 회원이었던 상태를 추적해서, 로그아웃 이벤트만 감지하기 위한 상태
+  const [wasLoggedIn, setWasLoggedIn] = useState(isLoggedIn);
+
+  // 나머지 내부 상태들
   const [description, setDescription] = useState("");
   const [fileName, setFileName] = useState("");
   const [showInput, setShowInput] = useState(false);
-  const [showUpload, setShowUpload] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
 
-  const toggleModal = () => {
-    setIsModalOpen(!isModalOpen);
-  };
+  // analysisData가 없으면 tempData 사용
+  const data = analysisData || tempData;
 
   useEffect(() => {
     window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
   }, []);
 
+  /**
+   * 회원이 로그아웃(즉, wasLoggedIn가 true였다가 isLoggedIn이 false로 변할 때)하면
+   * showUpload를 true로 전환하여 업로드 화면으로 강제 전환한다.
+   */
+  useEffect(() => {
+    if (wasLoggedIn && !isLoggedIn) {
+      setShowUpload(true);
+      // 필요 시 내부 상태 초기화
+      setDescription("");
+      setFileName("");
+      setShowInput(false);
+      setIsModalOpen(false);
+      setIsSharing(false);
+    }
+    setWasLoggedIn(isLoggedIn);
+  }, [isLoggedIn, wasLoggedIn]);
+
+  // 업로드 완료 시 호출되는 콜백 (UploadComponent에서 반드시 호출)
+  const handleUploadComplete = () => {
+    setShowUpload(false);
+  };
+
+  // "다른 대화 분석하기" 버튼 → 업로드 화면으로 전환
+  const handleResetAndUpload = () => {
+    setShowUpload(true);
+  };
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
+  // 파일 저장 관련 함수들
   const handleSaveAsImage = () => {
     setShowInput(true);
   };
@@ -74,10 +111,7 @@ const AnalysisResult = ({ analysisData }) => {
     });
   };
 
-  const handleResetAndUpload = () => {
-    setShowUpload(true);
-  };
-
+  // 공유하기 함수
   const handleShare = async () => {
     setIsSharing(true);
     try {
@@ -101,8 +135,6 @@ const AnalysisResult = ({ analysisData }) => {
       if (!json.secure_url) {
         throw new Error("Cloudinary 업로드 실패");
       }
-
-      // 링크 생성 후 복사
       const shareLink = `${window.location.origin}/share?imgUrl=${encodeURIComponent(
         json.secure_url
       )}`;
@@ -116,66 +148,68 @@ const AnalysisResult = ({ analysisData }) => {
     }
   };
 
+  // 업로드 화면이 보이는 경우 (회원이든 비회원이든 업로드 완료 전이거나, 회원이 로그아웃되어 강제 전환된 경우)
+  if (showUpload) {
+    return (
+      <Common>
+        <div className={styles.analysisContainer}>
+          {/* UploadComponent에서 업로드 완료 시 onUploadComplete 콜백 호출 */}
+          <UploadComponent onUploadComplete={handleUploadComplete} />
+        </div>
+      </Common>
+    );
+  }
+
+  // 업로드 완료 후 분석 결과 화면 렌더링
   return (
     <Common>
       <div className={styles.analysisContainer}>
-        {showUpload ? (
-          <UploadComponent />
-        ) : (
-          <>
-            <div id="captureArea">
-              <div className={styles.headerSection}>
-                <h2 className={styles.title}>분석결과(1:1 대화)</h2>
-                <p className={styles.description}>{description}</p>
+        <div id="captureArea">
+          <div className={styles.headerSection}>
+            <h2 className={styles.title}>분석결과(1:1 대화)</h2>
+            <p className={styles.description}>{description}</p>
+          </div>
+          <div className={styles.resultLayout}>
+            <div className={styles.leftContainer}>
+              <div className={styles.leftSection}>
+                <FriendshipMessage data={data} setDescription={setDescription} />
               </div>
-              <div className={styles.resultLayout}>
-                <div className={styles.leftContainer}>
-                  <div className={styles.leftSection}>
-                    {/* 예: 우선 Message나 Score 컴포넌트 등에 data를 그대로 넘김 */}
-                    <FriendshipMessage data={data} setDescription={setDescription} />
-                  </div>
-                  <div className={styles.chartSection}>
-                    <FriendshipScore data={data} />
-                  </div>
-                </div>
-
-                <div className={styles.analysisGrid}>
-                  {/* <StyleChart data={data.conversationStyle} /> */}
-                  <MessageCount data={data} />
-                  {/* <WordCloud words={data.keywords} /> */}
-                  {/* <ReplyTime data={data} /> */}
-                </div>
+              <div className={styles.chartSection}>
+                <FriendshipScore data={data} />
               </div>
             </div>
-
-            {showInput && (
-              <div className={styles.inputContainer}>
-                <input
-                  type="text"
-                  placeholder="저장할 파일명을 입력하세요"
-                  value={fileName}
-                  onChange={(e) => setFileName(e.target.value)}
-                  className={styles.fileInput}
-                />
-                <button onClick={captureScreenAndDownload} className={styles.saveButton}>
-                  확인
-                </button>
-              </div>
-            )}
-
-            <div className={styles.buttonContainer}>
-              <div className={styles.buttonTop}>
-                <Button text="📩 분석 결과 저장하기" onClick={handleSaveAsImage} />
-                <Button text={isSharing ? "공유 중..." : "🔗 공유하기"} onClick={handleShare} />
-              </div>
-              <div className={styles.buttonRow}>
-                <Button text="🔍 다른 대화 분석하기" onClick={handleResetAndUpload} />
-                <Button text="💬 피드백 톡" className="chat-send" onClick={toggleModal} />
-                {isModalOpen && <Chat onClose={toggleModal} />}
-              </div>
+            <div className={styles.analysisGrid}>
+              <MessageCount data={data} />
             </div>
-          </>
+          </div>
+        </div>
+
+        {showInput && (
+          <div className={styles.inputContainer}>
+            <input
+              type="text"
+              placeholder="저장할 파일명을 입력하세요"
+              value={fileName}
+              onChange={(e) => setFileName(e.target.value)}
+              className={styles.fileInput}
+            />
+            <button onClick={captureScreenAndDownload} className={styles.saveButton}>
+              확인
+            </button>
+          </div>
         )}
+
+        <div className={styles.buttonContainer}>
+          <div className={styles.buttonTop}>
+            <Button text="📩 분석 결과 저장하기" onClick={handleSaveAsImage} />
+            <Button text={isSharing ? "공유 중..." : "🔗 공유하기"} onClick={handleShare} />
+          </div>
+          <div className={styles.buttonRow}>
+            <Button text="🔍 다른 대화 분석하기" onClick={handleResetAndUpload} />
+            <Button text="💬 피드백 톡" onClick={toggleModal} />
+            {isModalOpen && <Chat onClose={toggleModal} />}
+          </div>
+        </div>
       </div>
     </Common>
   );

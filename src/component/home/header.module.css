@@ -168,3 +168,11 @@
   border-radius: 24px;
   cursor: pointer;
 }
+
+.sad {
+  display: block;
+  margin: 0 auto;
+  width: 160px; 
+  height: auto;
+  margin-bottom: 30px;
+}
