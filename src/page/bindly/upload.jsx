@@ -7,6 +7,7 @@ import { config } from "../../config.js";
 import { ImCancelCircle } from "react-icons/im";
 import { PiSpinnerLight } from "react-icons/pi";
 import AnalysisResult from "../analysis/analysisResult";
+import Chat from "../home/Chat.jsx"; // Chat 컴포넌트 import (상대 경로 확인)
 
 const Upload = () => {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -107,6 +108,16 @@ const Upload = () => {
     }
   };
 
+  // "대화 피드백 보기" 버튼을 누르면 Chat 페이지로 이동
+  const handleShowChat = () => {
+    setCurrentPage("chat");
+  };
+
+  // Chat.jsx에서 닫기 버튼을 누르면 결과 페이지로 복귀
+  const handleCloseChat = () => {
+    setCurrentPage("result");
+  };
+
   return (
     <Common>
       {currentPage === "upload" && (
@@ -158,7 +169,17 @@ const Upload = () => {
       )}
 
       {currentPage === "result" && analysisData && (
-        <AnalysisResult analysisData={analysisData} />
+        <AnalysisResult
+          analysisData={analysisData}
+          onShowChat={handleShowChat} // "대화 피드백 보기" 버튼에서 호출
+        />
+      )}
+
+      {currentPage === "chat" && analysisData && (
+        <Chat
+          onClose={handleCloseChat} 
+          conversationText={analysisData.normalizedText} // 분석된 전체 대화 전달
+        />
       )}
     </Common>
   );
