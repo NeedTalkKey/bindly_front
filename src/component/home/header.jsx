@@ -3,6 +3,7 @@ import { Common } from "./common";
 import headerStyles from "./header.module.css";
 import Login from "../login/Login";
 import Regist from "../regist/Regist";
+import sad from "../../asset/sad.png"
 import { AuthContext } from "../../AuthContext";
 
 const Header = () => {
@@ -94,10 +95,15 @@ const Header = () => {
             className={headerStyles.logoutModalContent}
             onClick={(e) => e.stopPropagation()}
           >
-            {/* 가운데 문구 없이 딱 한 줄로만 */}
             <h2 className={headerStyles.logoutTitle}>
               정말 로그아웃하시겠습니까?
             </h2>
+
+            <img
+              className={headerStyles.sad}
+              src={sad}
+              alt="카카오톡 로고"
+            />
 
             <div className={headerStyles.logoutButtonGroup}>
               <button

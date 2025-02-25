@@ -161,6 +161,7 @@
   font-size: 24px;
   color: #1f3a93;
   cursor: pointer;
+  z-index: 9999;
 }
 .close-icon:hover {
   color: pink;
