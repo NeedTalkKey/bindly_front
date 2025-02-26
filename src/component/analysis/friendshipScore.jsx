@@ -1,5 +1,4 @@
 import React from "react";
-// import { Bar } from "react-chartjs-2";
 import { Doughnut } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -53,13 +52,12 @@ const FriendshipScore = ({ data }) => {
           size: 16,
         },
         formatter: (value, context) => {
-          // ✅ '총 친밀감' 점수만 표시하고, 빈 문자열 데이터는 무시
-          return context.dataIndex === 0 ? `${context.chart.data.labels[context.dataIndex]} ${value}점` : "";
+          // 소수점 첫째자리에서 반올림하여 정수로 표시
+          return context.dataIndex === 0 ? `${context.chart.data.labels[context.dataIndex]} ${Math.round(value)}점` : "";
         },
       },
     },
   };
-
 
   return (
     <div className={styles.chartContainer}>
