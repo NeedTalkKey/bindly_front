@@ -57,6 +57,7 @@ const StyleChart = ({ data }) => {
     scales: {
       y: {
         beginAtZero: true,
+        max: 100,
         ticks: {
           callback: (value) => value + "%",
         },
