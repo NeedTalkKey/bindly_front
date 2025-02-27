@@ -47,7 +47,7 @@ const tempData = {
 뭔
 이게 물리적으로 진짜 빠짐
 흡혈귀여\\
-농담같지 진짜야 진짜 그냥 축 쳐짐 그리고 갑자기 밝아지면 기침나오고 그럼`
+농담같지 진짜야 진짜 그냥 축 쳐짐 그리고 갑자기 밝아지면 기침나오고 그럼`,
 };
 
 const AnalysisResult = ({ analysisData }) => {
@@ -142,9 +142,9 @@ const AnalysisResult = ({ analysisData }) => {
       if (!json.secure_url) {
         throw new Error("Cloudinary 업로드 실패");
       }
-      const shareLink = `${window.location.origin}/share?imgUrl=${encodeURIComponent(
-        json.secure_url
-      )}`;
+      const shareLink = `${
+        window.location.origin
+      }/share?imgUrl=${encodeURIComponent(json.secure_url)}`;
       await navigator.clipboard.writeText(shareLink);
       alert("링크가 복사되었습니다!");
     } catch (error) {
@@ -178,7 +178,10 @@ const AnalysisResult = ({ analysisData }) => {
           <div className={styles.resultLayout}>
             <div className={styles.leftContainer}>
               <div className={styles.leftSection}>
-                <FriendshipMessage data={data} setDescription={setDescription} />
+                <FriendshipMessage
+                  data={data}
+                  setDescription={setDescription}
+                />
               </div>
               <div className={styles.chartSection}>
                 <FriendshipScore data={data} />
@@ -204,7 +207,10 @@ const AnalysisResult = ({ analysisData }) => {
               onChange={(e) => setFileName(e.target.value)}
               className={styles.fileInput}
             />
-            <button onClick={captureScreenAndDownload} className={styles.saveButton}>
+            <button
+              onClick={captureScreenAndDownload}
+              className={styles.saveButton}
+            >
               확인
             </button>
           </div>
@@ -213,10 +219,16 @@ const AnalysisResult = ({ analysisData }) => {
         <div className={styles.buttonContainer}>
           <div className={styles.buttonTop}>
             <Button text="📩 분석 결과 저장하기" onClick={handleSaveAsImage} />
-            <Button text={isSharing ? "공유 중..." : "🔗 공유하기"} onClick={handleShare} />
+            <Button
+              text={isSharing ? "공유 중..." : "🔗 공유하기"}
+              onClick={handleShare}
+            />
           </div>
           <div className={styles.buttonRow}>
-            <Button text="🔍 다른 대화 분석하기" onClick={handleResetAndUpload} />
+            <Button
+              text="🔍 다른 대화 분석하기"
+              onClick={handleResetAndUpload}
+            />
             {/* "💬 피드백 톡" 버튼 클릭 시 모달로 Chat 컴포넌트를 띄움 */}
             <Button text="💬 피드백 톡" onClick={toggleModal} />
           </div>
@@ -224,7 +236,11 @@ const AnalysisResult = ({ analysisData }) => {
 
         {isModalOpen && (
           // Chat 컴포넌트에 분석된 전체 대화(normalizedText)를 conversationText로 전달
-          <Chat onClose={toggleModal} conversationText={data.normalizedText} speakerMapping={data.speakerMapping}/>
+          <Chat
+            onClose={toggleModal}
+            conversationText={data.normalizedText}
+            speakerMapping={data.speakerMapping}
+          />
         )}
       </div>
     </Common>
