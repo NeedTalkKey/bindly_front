@@ -6,6 +6,7 @@ import styles from "./analysisResult.module.css";
 import FriendshipMessage from "../../component/analysis/friendshipMessage";
 import FriendshipScore from "../../component/analysis/friendshipScore";
 import MessageCount from "../../component/analysis/messageCount";
+import StyleChart from "../../component/analysis/styleChart";
 import UploadComponent from "../bindly/upload";
 import Button from "../../component/bindly/button";
 import { Chat } from "../home/Chat";
@@ -183,8 +184,13 @@ const AnalysisResult = ({ analysisData }) => {
                 <FriendshipScore data={data} />
               </div>
             </div>
-            <div className={styles.analysisGrid}>
-              <MessageCount data={data} />
+            <div>
+              <div className={styles.analysisGrid}>
+                <MessageCount data={data} />
+              </div>
+              <div className={styles.analysisGrid}>
+                <StyleChart data={data} />
+              </div>
             </div>
           </div>
         </div>

@@ -17,7 +17,7 @@ const SaveToLocalStorage = () => {
       login(params["token"], params["nickname"], params["user_model"]);
       navigate("/");
     }
-  }, [params, navigate]);
+  }, [params, navigate, login]);
 
   return <div>데이터를 저장 중입니다...</div>;
 };
