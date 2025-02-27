@@ -108,9 +108,10 @@ export const Chat = ({
           let feedbackContent = "";
           if (data.feedback && Array.isArray(data.feedback)) {
             data.feedback.forEach((item) => {
-              feedbackContent += `[TOP ${item.rank}]<br/>`;
-              feedbackContent += `원문: ${item.original}<br/>`;
-              feedbackContent += `개선: ${item.improvedText}<br/><br/>`;
+              feedbackContent += `🏆[TOP ${item.rank}]<br/>`;
+              feedbackContent += `✔️원문: ${item.original}<br/>`;
+              feedbackContent += `✔️개선: ${item.improvedText}<br/>`;
+              feedbackContent += `✔️변경: ${item.changedText}<br/><br/>`;
             });
             feedbackContent += "피드백이 완료되었습니다. 종료 버튼을 누르면 대화를 저장할 수 있어요.";
           } else if (data.message) {
@@ -156,7 +157,7 @@ export const Chat = ({
 
   const handleEndConversation = () => {
     console.log("대화 종료 및 저장:", { title, messages });
-    alert("대화가 저장되었습니다. (콘솔에서 확인 가능)");
+    alert("대화가 저장되었습니다. (콘솔에서 확인)");
     setMessages([{ role: "ai", content: aiQuestions[1] }]);
     setStep(1);
     setTitle("");
