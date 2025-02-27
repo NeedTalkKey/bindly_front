@@ -210,3 +210,9 @@
     padding-right: 20px !important;
   }
 }
+
+.analysis-indicator {
+  margin-left: 50px; /* 필요하다면 조정 */
+  color: black;
+  font-size: 20px;
+}

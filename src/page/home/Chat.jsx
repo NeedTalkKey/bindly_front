@@ -20,20 +20,19 @@ export const Chat = ({
   const [step, setStep] = useState(1);
   const [selectedSpeaker, setSelectedSpeaker] = useState(null);
   const [conversationText] = useState(initialConversationText || "");
+  const [isAnalyzing, setIsAnalyzing] = useState(false); // 분석 상태 관리
 
   // 화자 버튼 동적 생성
   const [speakerButtons, setSpeakerButtons] = useState([]);
   useEffect(() => {
     if (speakerMapping && Object.keys(speakerMapping).length > 0) {
-      // speakerMapping: { u1: '화자1', u2: '화자2' }
       const arr = Object.entries(speakerMapping).map(([uKey, realName]) => ({
-        text: realName, // 화면 표시 이름
-        value: uKey,    // 내부적으로 'u1' / 'u2'
+        text: realName,
+        value: uKey,
         next: 2,
       }));
       setSpeakerButtons(arr);
     } else {
-      // fallback: 기본 u1, u2
       setSpeakerButtons([
         { text: "u1", value: "u1", next: 2 },
         { text: "u2", value: "u2", next: 2 },
@@ -49,7 +48,7 @@ export const Chat = ({
 
   // 단계별 버튼
   const buttonStages = {
-    1: speakerButtons, // 동적으로 생성
+    1: speakerButtons,
     2: [
       { text: "공감", value: "공감", next: 3 },
       { text: "팩폭", value: "팩폭", next: 3 },
@@ -76,18 +75,22 @@ export const Chat = ({
 
     // === Step 1: 화자 선택 ===
     if (step === 1) {
-      setSelectedSpeaker(btn.value); // 'u1' or 'u2'
+      setSelectedSpeaker(btn.value);
       setStep(btn.next);
       const nextAiQuestion = aiQuestions[btn.next];
       if (nextAiQuestion) {
         setMessages((prev) => [...prev, { role: "ai", content: nextAiQuestion }]);
       }
     }
-    // === Step 2: 피드백(공감/팩폭) ===
+    // === Step 2: 피드백(공감/팩폭) 요청 ===
     else if (step === 2) {
       const feedbackStyle = btn.value; // '공감' or '팩폭'
       setStep(btn.next);
       const token = localStorage.getItem("token");
+
+      // 1) 분석 시작 상태
+      setIsAnalyzing(true);
+
       fetch(`${config.hosting.ip}:${config.hosting.back_port}/feedback/feedback`, {
         method: "POST",
         headers: {
@@ -96,7 +99,7 @@ export const Chat = ({
         },
         body: JSON.stringify({
           conversationText,
-          speaker: selectedSpeaker, // 'u1' or 'u2'
+          speaker: selectedSpeaker,
           feedbackStyle,
         }),
       })
@@ -105,7 +108,6 @@ export const Chat = ({
           let feedbackContent = "";
           if (data.feedback && Array.isArray(data.feedback)) {
             data.feedback.forEach((item) => {
-              // item.improvedText는 이미 원하는 형식(각 항목별 줄바꿈 포함)으로 생성되었다고 가정합니다.
               feedbackContent += `[TOP ${item.rank}]<br/>`;
               feedbackContent += `원문: ${item.original}<br/>`;
               feedbackContent += `개선: ${item.improvedText}<br/><br/>`;
@@ -116,16 +118,16 @@ export const Chat = ({
           } else {
             feedbackContent = "피드백 생성에 문제가 발생했습니다.";
           }
-          // HTML 형식의 피드백을 적용하기 위해 dangerouslySetInnerHTML 사용
+
+          // 2) 분석 결과 표시
           setMessages((prev) => [...prev, { role: "ai", content: feedbackContent }]);
-          // 다음 단계(3)
-          const nextAiQuestion = aiQuestions[3];
-          if (nextAiQuestion) {
-            setMessages((prev) => [...prev, { role: "ai", content: nextAiQuestion }]);
-          }
+
+          // 3) 분석 완료 상태 해제
+          setIsAnalyzing(false);
         })
         .catch((err) => {
           console.error("피드백 API 에러:", err);
+          setIsAnalyzing(false);
         });
     }
     // === Step 3: 종료 ===
@@ -174,37 +176,46 @@ export const Chat = ({
                 <div className="card-body chat-body">
                   <div className="messages">
                     {isLoggedIn ? (
-                      messages.map((msg, idx) => (
-                        <div key={idx}>
-                          {msg.role === "ai" ? (
-                            <div className="message other d-flex flex-row align-items-start mb-5">
-                              <div className="symbol symbol-40 mr-3">
-                                <img
-                                  alt="Pic"
-                                  src={Rabbit}
-                                  style={{
-                                    width: "40px",
-                                    height: "40px",
-                                    borderRadius: "50%",
-                                  }}
+                      <>
+                        {/* 기존 메시지 표시 */}
+                        {messages.map((msg, idx) => (
+                          <div key={idx}>
+                            {msg.role === "ai" ? (
+                              <div className="message other d-flex flex-row align-items-start mb-5">
+                                <div className="symbol symbol-40 mr-3">
+                                  <img
+                                    alt="Pic"
+                                    src={Rabbit}
+                                    style={{
+                                      width: "40px",
+                                      height: "40px",
+                                      borderRadius: "50%",
+                                    }}
+                                  />
+                                </div>
+                                <div
+                                  className="message-content rounded p-5 text-dark-50 font-weight-bold font-size-lg text-left max-w-400px"
+                                  dangerouslySetInnerHTML={{ __html: msg.content }}
                                 />
                               </div>
-                              <div
-                                className="message-content rounded p-5 text-dark-50 font-weight-bold font-size-lg text-left max-w-400px"
-                                // HTML 형식으로 렌더링하여 <br/> 태그가 적용되도록 함
-                                dangerouslySetInnerHTML={{ __html: msg.content }}
-                              />
-                            </div>
-                          ) : (
-                            <div className="message you d-flex flex-row align-items-end justify-content-end mb-5">
-                              <div
-                                className="message-content rounded p-5 text-dark-50 font-weight-bold font-size-lg text-right max-w-400px"
-                                dangerouslySetInnerHTML={{ __html: msg.content }}
-                              />
-                            </div>
-                          )}
-                        </div>
-                      ))
+                            ) : (
+                              <div className="message you d-flex flex-row align-items-end justify-content-end mb-5">
+                                <div
+                                  className="message-content rounded p-5 text-dark-50 font-weight-bold font-size-lg text-right max-w-400px"
+                                  dangerouslySetInnerHTML={{ __html: msg.content }}
+                                />
+                              </div>
+                            )}
+                          </div>
+                        ))}
+
+                        {/* 분석중일 때만 표시. 말풍선 형태가 아니라, 간단한 텍스트 형태로. */}
+                        {isAnalyzing && (
+                          <div className="analysis-indicator">
+                            분석중...
+                          </div>
+                        )}
+                      </>
                     ) : (
                       <p>로그인이 필요한 서비스입니다.</p>
                     )}
