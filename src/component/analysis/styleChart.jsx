@@ -23,7 +23,6 @@ ChartJS.register(
 );
 
 const StyleChart = ({ data }) => {
-  console.log("StyleChart 컴포넌트 > data : ", data);
   const chartData = {
     labels: [
       data.empathyMesurePromise[0].speaker,

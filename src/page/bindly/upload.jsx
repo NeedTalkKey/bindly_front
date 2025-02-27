@@ -77,10 +77,13 @@ const Upload = () => {
       formData.append("file", selectedFile);
 
       // Fetch로 업로드 및 분석 요청
-      const response = await fetch(`${config.hosting.ip}:${config.hosting.back_port}/analysis/upload`, {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        `${config.hosting.ip}:${config.hosting.back_port}/analysis/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       if (!response.ok) {
         const errText = await response.text();
@@ -122,37 +125,54 @@ const Upload = () => {
     <Common>
       {currentPage === "upload" && (
         <div className={styles.uploadContainer} id="uploadSection">
-          <p className={styles.description}>대화내용.txt 파일을 업로드 해주세요</p>
+          <p className={styles.description}>
+            대화내용.txt 파일을 업로드 해주세요
+          </p>
           <p className={styles.subDescription}>
-            ※ 업로드된 TXT 파일은 분석 시점을 기준으로 최근 1년간의 데이터만 포함됩니다.
+            ※ 업로드된 TXT 파일은 분석 시점을 기준으로 최근 1년간의 데이터만
+            포함됩니다.
           </p>
           <div
-            className={`${styles.uploadBox} ${errorMessage ? styles.uploadError : ""}`}
+            className={`${styles.uploadBox} ${
+              errorMessage ? styles.uploadError : ""
+            }`}
             onDragOver={handleDragOver}
             onDrop={handleDrop}
           >
             {!selectedFile ? (
               <>
                 <label htmlFor="fileUpload" className={styles.uploadLabel}>
-                  +
-                  <p className={styles.fileUpload}>파일 업로드</p>
+                  +<p className={styles.fileUpload}>파일 업로드</p>
                 </label>
-                {errorMessage && <p className={styles.errorMessage}>{errorMessage}</p>}
+                {errorMessage && (
+                  <p className={styles.errorMessage}>{errorMessage}</p>
+                )}
               </>
             ) : (
               <div className={styles.uploadedFile}>
                 <p className={styles.uploadedSucces}>업로드 완료</p>
                 <div className={styles.uploadedFileRow}>
                   <p>{selectedFile.name}</p>
-                  <button className={styles.deleteButton} onClick={handleDeleteFile}>
+                  <button
+                    className={styles.deleteButton}
+                    onClick={handleDeleteFile}
+                  >
                     <ImCancelCircle />
                   </button>
                 </div>
               </div>
             )}
-            <input type="file" id="fileUpload" accept=".txt" onChange={handleFileChange} hidden />
+            <input
+              type="file"
+              id="fileUpload"
+              accept=".txt"
+              onChange={handleFileChange}
+              hidden
+            />
           </div>
-          {!isLoading && <Button text="분석 시작" onClick={handleUploadClick} />}
+          {!isLoading && (
+            <Button text="분석 시작" onClick={handleUploadClick} />
+          )}
         </div>
       )}
 
@@ -162,7 +182,7 @@ const Upload = () => {
             <p className={styles.loadingText}>분석 중...</p>
             <div className={styles.loadingSpinnerContainer}>
               <PiSpinnerLight className={styles.loadingIcon} />
-              <span className={styles.loadingPercentage}>{progress}%</span>
+              <span className={styles.loadingPercentage}></span>
             </div>
           </div>
         </div>
@@ -177,7 +197,7 @@ const Upload = () => {
 
       {currentPage === "chat" && analysisData && (
         <Chat
-          onClose={handleCloseChat} 
+          onClose={handleCloseChat}
           conversationText={analysisData.normalizedText} // 분석된 전체 대화 전달
         />
       )}
