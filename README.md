@@ -1,7 +1,7 @@
 # 🐇 Bindly Frontend
 <h4 align="center"> 
 <img src="https://github.com/user-attachments/assets/caddfeb7-1a14-4c00-a03e-cf72b9eb74d3" alt="long" border="0">
- </h2>
+ </h4>
  
 ✨ **Bindly** 프로젝트의 프론트엔드 저장소입니다!  
 
@@ -11,17 +11,43 @@
 
 ## 🚀 주요 기능
 
-📂 **메인 화면 및 업로드 화면**: 사용자가 데이터를 업로드하고 분석 결과를 확인할 수 있어요! 
+### ❤ **메인 화면**
+>  **로그인 및 회원 가입, 그리고 챗봇과의 대화 내역을 확인할 수 있어요.** 🔑
+>   - **아이디**: 특수 문자를 포함한 6자 이상 20자 이하
+>   - **비밀번호**: 최대 20자 설정 가능
+> <h4 align="left"> 
+> <img src="https://github.com/user-attachments/assets/d3cabc28-e248-4b15-9dce-be510eecb6e4" alt="long" border="0" width = 800>
+> </h4>
+ 
 
-📝 **피드백 톡 구현**:  AI와 실시간으로 피드백을 주고받을 수 있어요! 
+### 🧡 **업로드 화면**
+> **사용자가 카톡에서 내보낸 대화 TXT 파일을 업로드합니다.** 📤 
+> <h4 align="left"> 
+>  <img src="https://github.com/user-attachments/assets/2724aab8-f070-4b16-8179-84e1650fdf25" alt="long" border="0" width = 800>
+>  </h4>
 
-📊 **결과 분석 화면**: 업로드된 데이터의 분석 결과를 직관적으로 보여줍니다.
-   - 도넛 차트 🥯 및 워드 클라우드 ☁ 제공
-   - 차트 클릭 시 팝업으로 상세 정보 표시
+### 💛 **결과 분석 화면**
+> **업로드된 대화 데이터의 분석 결과를 한눈에** 📊
+> - Bindly 모델이 대화 상대와의 관계, 친밀감 점수, 그리고 공감형 대화의 비중을 분석해 줍니다.
+> - 도넛 차트 🥯 및 워드 클라우드 ☁ 제공
+> - 차트 클릭 시 팝업으로 상세 정보 표시
      
-🔑 **사용자 인증 기능**: 회원가입 및 로그인 기능 제공
-   - **아이디**: 특수 문자를 포함한 6자 이상 20자 이하
-   - **비밀번호**: 최대 20자 설정 가능
+<h4 align="left"> 
+<img src="https://github.com/user-attachments/assets/d157cd15-962d-4345-af3e-f18008d0a7a9" alt="long" border="0" width = 800>
+ </h4>
+ 
+### 💚 **피드백 톡 구현** 
+> **AI와 실시간으로 자신의 대화법에 대한 피드백을 주고받을 수 있어요! 📝**
+> - 피드백을 듣고 싶은 사용자(나, 상대 중) 선택
+> - AI의 피드백 스타일을 선택 (공감 vs 팩트폭력)
+> - AI가 대화를 분석하고, 더 나은 소통 방식을 제안
+<h4 align="left"> 
+<img src="https://github.com/user-attachments/assets/3d780b21-510f-431b-8a91-f976f5917bf4" alt="long" border="0" width = 800>
+</h4>
+
+
+
+
 
 ---
 
