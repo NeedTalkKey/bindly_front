@@ -1,10 +1,10 @@
 # 🐇 Bindly Frontend
 <h4 align="center"> 
-<img src="https://github.com/user-attachments/assets/ffc1b57c-e000-4d56-b1ab-63531e3e9062" alt="long" border="0">
+<img src="https://github.com/user-attachments/assets/caddfeb7-1a14-4c00-a03e-cf72b9eb74d3" alt="long" border="0">
  </h2>
  
-✨ Bindly 프로젝트의 프론트엔드 저장소입니다! ✨  
-<br>
+✨ **Bindly** 프로젝트의 프론트엔드 저장소입니다!  
+
 **사용자의 대화 데이터를 분석하고 시각화하는 기능**을 제공하는 웹 서비스입니다. 💬📊
 
 ---
@@ -91,12 +91,12 @@ bindly_front/
 
 📌 **2025.02.19** - 회원가입 시 입력 검증 추가 및 UI 개선 💡
 
-📌 **더 자세한 변경 사항은 커밋 기록을 확인해주세요!** 🧐
+📌 더 자세한 변경 사항은 커밋 기록을 확인해주세요! 🧐
 
 ---
 🐾 **팀 톡끼 | Team Talky** : 김남희, 김채연, 박건우, 박치호, 안승균 <br>
 
 **Bindly** 프로젝트의 다른 Git도 둘러보세요!
-
-- 
-- 
+> 🐰 [Bindly Back-end](https://github.com/NeedTalkKey/bindly_back)
+> 
+> ⚡ [Bindly Fast-API](https://github.com/NeedTalkKey/bindly_fastapi)
